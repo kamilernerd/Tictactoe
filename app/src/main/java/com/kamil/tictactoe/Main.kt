@@ -1,5 +1,6 @@
 package com.kamil.tictactoe
 
+import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.kamil.tictactoe.databinding.MainBinding
@@ -38,4 +39,7 @@ class Main : AppCompatActivity() {
         // Check if player is in game and forfeit the game
     }
 
+    public fun getAppContext(): Context? {
+        return applicationContext
+    }
 }

@@ -4,7 +4,10 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
+import com.android.volley.RequestQueue
+import com.android.volley.toolbox.Volley
 import com.kamil.tictactoe.databinding.DialogJoinGameBinding
+import com.kamil.tictactoe.services.GameAPI
 
 class JoinGameDialog: DialogFragment() {
 
@@ -18,8 +21,8 @@ class JoinGameDialog: DialogFragment() {
             builder.apply {
                 setTitle("Join game")
                 setPositiveButton("Join") { dialog, which ->
-                    if(binding.username.text.toString() != ""){
-
+                    if(binding.username.text.toString() != "" && binding.gameCode.text.toString() != ""){
+                        GameAPI.joinGame(Volley.newRequestQueue(context), "0r9et", "test1")
                     }
                 }
                 setNegativeButton("Cancel") { dialog, which ->
