@@ -3,6 +3,7 @@ package com.kamil.tictactoe
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.kamil.tictactoe.databinding.MainBinding
+import com.kamil.tictactoe.dialogs.JoinGameDialog
 
 class Main : AppCompatActivity() {
 
@@ -14,6 +15,16 @@ class Main : AppCompatActivity() {
         binding = MainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.joinGameButton.setOnClickListener {
+            JoinGameDialog().show(
+                supportFragmentManager,
+                "Join game dialog"
+            )
+        }
+
+        binding.createGameButton.setOnClickListener {
+            // Open modal for creating new game
+        }
 
     }
 
