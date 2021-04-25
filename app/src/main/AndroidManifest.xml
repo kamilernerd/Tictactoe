@@ -19,6 +19,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".game.Board"
+            android:label="Board"
+            android:theme="@style/Theme.Tictactoe.NoActionBar"
+        />
+
     </application>
 
 </manifest>

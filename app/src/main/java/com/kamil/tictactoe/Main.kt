@@ -16,6 +16,8 @@ class Main : AppCompatActivity() {
 
         binding = MainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        //context = this
     }
 
     override fun onStart() {
@@ -43,6 +45,10 @@ class Main : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
         // Check if player is in game and forfeit the game
+    }
+
+    companion object{
+        //lateinit var context: Main private set
     }
 
 }

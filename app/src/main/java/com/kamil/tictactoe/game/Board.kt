@@ -1,19 +1,31 @@
 package com.kamil.tictactoe.game
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.kamil.tictactoe.databinding.BoardBinding
 import com.kamil.tictactoe.databinding.MainBinding
+import com.kamil.tictactoe.dialogs.JoinGameDialog.Companion.JSON_RESPONSE
 
 class Board : AppCompatActivity() {
 
     private lateinit var binding: BoardBinding
+
+    private var data: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = BoardBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        data = intent.getStringExtra(JSON_RESPONSE)
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        Log.println(Log.WARN, TAG, data.toString())
     }
 
     override fun onResume() {
@@ -24,6 +36,10 @@ class Board : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
         // Check if player is in game and forfeit the game
+    }
+
+    companion object {
+        val TAG = "BoardActivity"
     }
 
 }
