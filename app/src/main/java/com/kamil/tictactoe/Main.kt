@@ -16,7 +16,10 @@ class Main : AppCompatActivity() {
 
         binding = MainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+    }
 
+    override fun onStart() {
+        super.onStart()
         binding.joinGameButton.setOnClickListener {
             JoinGameDialog().show(
                 supportFragmentManager,
@@ -30,7 +33,6 @@ class Main : AppCompatActivity() {
                 "Create game dialog"
             )
         }
-
     }
 
     override fun onResume() {
