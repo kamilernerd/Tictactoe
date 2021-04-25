@@ -21,8 +21,8 @@ class CreateGameDialog: DialogFragment() {
             builder.apply {
                 setTitle("Create game")
                 setPositiveButton("Create") { dialog, which ->
-                    if (binding.username.text.toString() != ""){
-                        GameAPI.createGame(Volley.newRequestQueue(context), "test1", initialState)
+                    if (binding.username.text.toString() != "") {
+                        GameAPI.createGame(Volley.newRequestQueue(context), binding.username.text.toString(), initialState)
                     }
                 }
                 setNegativeButton("Cancel") { dialog, which ->

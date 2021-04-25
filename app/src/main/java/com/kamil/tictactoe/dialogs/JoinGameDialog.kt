@@ -2,9 +2,13 @@ package com.kamil.tictactoe.dialogs
 
 import android.app.AlertDialog
 import android.app.Dialog
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.DialogFragment
+import com.android.volley.toolbox.Volley
 import com.kamil.tictactoe.databinding.DialogJoinGameBinding
+import com.kamil.tictactoe.services.GameAPI
 
 class JoinGameDialog: DialogFragment() {
 
@@ -17,9 +21,16 @@ class JoinGameDialog: DialogFragment() {
 
             builder.apply {
                 setTitle("Join game")
-                setPositiveButton("Join") { dialog, which ->
-                    if(binding.username.text.toString() != ""){
 
+                setPositiveButton("Join") { dialog, which ->
+                    val username = binding.username.text.toString()
+                    val gameCode = binding.gameCode.text.toString()
+
+                    if (username.isNotEmpty() && gameCode.isNotEmpty()) {
+                        GameAPI.joinGame(Volley.newRequestQueue(context), gameCode, username) { gameId: String, json: String ->
+                            Log.println(Log.INFO, "JOIN GAME DIALOG", json)
+                            val intent = Intent()
+                        }
                     }
                 }
                 setNegativeButton("Cancel") { dialog, which ->

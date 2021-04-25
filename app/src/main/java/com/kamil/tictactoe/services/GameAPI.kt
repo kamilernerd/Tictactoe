@@ -7,22 +7,27 @@ import com.android.volley.toolbox.JsonObjectRequest
 import org.json.JSONObject
 import com.android.volley.RequestQueue as RequestQueue1
 
+typealias JoingameCallback = (gameId: String, json: String) -> Unit
+
 object GameAPI {
 
     private const val BASE_URI = "https://api.kamiloracz.no"
     private const val JOIN_GAME = "$BASE_URI/game/join"
     private const val CREATE_GAME = "$BASE_URI/game"
 
-    fun joinGame(requestQueue: RequestQueue1, gameId: String, playerName: String) {
+    fun joinGame(requestQueue: RequestQueue1, gameId: String, playerName: String, callback: JoingameCallback) {
         val body = JSONObject()
         body.put("gameId", gameId)
         body.put("player", playerName)
 
-        val request = object : JsonObjectRequest(Request.Method.POST, "$BASE_URI/game/$gameId/join", body, Response.Listener { response ->
-            Log.println(Log.VERBOSE, "GameAPI response", response.toString())
-        }, Response.ErrorListener { error ->
-            Log.println(Log.VERBOSE, "GameAPI response error", error.toString())
-        }) {
+        val request = object : JsonObjectRequest(Method.POST, "$BASE_URI/game/$gameId/join", body,
+            Response.Listener { response ->
+                val json = JSONObject(response.toString())
+                callback(gameId, json.toString())
+            },
+            Response.ErrorListener { error ->
+                Log.println(Log.VERBOSE, "GameAPI response error", error.toString())
+            }) {
             override fun getHeaders(): MutableMap<String, String> {
                 val headers = HashMap<String, String>()
                 headers["Content-Type"] = "application/json"
