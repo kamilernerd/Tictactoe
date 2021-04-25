@@ -4,10 +4,12 @@ import android.util.Log
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
+import com.google.gson.Gson
+import com.kamil.tictactoe.data.GameState
 import org.json.JSONObject
 import com.android.volley.RequestQueue as RequestQueue1
 
-typealias JoingameCallback = (gameId: String, json: String) -> Unit
+typealias JoingameCallback = (gameId: String, json: GameState) -> Unit
 
 object GameAPI {
 
@@ -22,8 +24,7 @@ object GameAPI {
 
         val request = object : JsonObjectRequest(Method.POST, "$BASE_URI/game/$gameId/join", body,
             Response.Listener { response ->
-                val json = JSONObject(response.toString())
-                callback(gameId, json.toString())
+                callback(gameId, Gson().fromJson(response.toString(), GameState::class.java))
             },
             Response.ErrorListener { error ->
                 Log.println(Log.VERBOSE, "GameAPI response error", error.toString())

@@ -10,9 +10,11 @@ import android.util.Log
 import androidx.fragment.app.DialogFragment
 import com.android.volley.toolbox.Volley
 import com.kamil.tictactoe.Main
+import com.kamil.tictactoe.data.GameState
 import com.kamil.tictactoe.databinding.DialogJoinGameBinding
 import com.kamil.tictactoe.game.Board
 import com.kamil.tictactoe.services.GameAPI
+import org.json.JSONObject
 
 class JoinGameDialog: DialogFragment() {
 
@@ -29,13 +31,13 @@ class JoinGameDialog: DialogFragment() {
         builder.setPositiveButton("Join") { dialog, which ->
             val username = binding.username.text.toString()
             val gameCode = binding.gameCode.text.toString()
-            Log.println(Log.INFO, "JOIN GAME DIALOG", "BUTTON TEST")
 
             if (username.isNotEmpty() && gameCode.isNotEmpty()) {
-                GameAPI.joinGame(Volley.newRequestQueue(builder.context), gameCode, username) { gameId: String, json: String ->
-                    Log.println(Log.INFO, "JOIN GAME DIALOG", json)
+                GameAPI.joinGame(Volley.newRequestQueue(builder.context), gameCode, username) { gameId: String, json: GameState ->
                     val intent = Intent(builder.context, Board::class.java).apply {
-                        putExtra(JSON_RESPONSE, json)
+                        val bundle = Bundle()
+                        bundle.putParcelable(JSON_RESPONSE, json)
+                        putExtras(bundle)
                     }
                     builder.context.startActivity(intent)
                 }
