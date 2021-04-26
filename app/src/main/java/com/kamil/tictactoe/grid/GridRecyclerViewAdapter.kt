@@ -64,10 +64,10 @@ class GridRecyclerViewAdapter(
 
             // Send data
             GameAPI.updateGame(Volley.newRequestQueue(holder.itemView.context), game) {
+                // Start polling
+
                 Log.println(Log.VERBOSE, TAG, it.toString())
             }
-
-            // Start polling
         }
     }
 
