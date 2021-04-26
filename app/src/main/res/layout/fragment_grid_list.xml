@@ -3,13 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/black">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/gridLayout"
         android:name="com.kamil.tictactoe.grid.GridFragment"
-        android:layout_width="match_parent"
-        android:layout_height="600dp"
+        android:layout_width="380dp"
+        android:layout_height="380dp"
         app:layoutManager="LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -17,8 +18,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:context=".grid.GridFragment"
-        tools:listitem="@layout/fragment_grid_item"
-        android:background="@color/black"
-        />
+        tools:listitem="@layout/fragment_grid_item" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
