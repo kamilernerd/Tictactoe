@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.kamil.tictactoe.data.GameState
 import com.kamil.tictactoe.data.flattenOutState
 import com.kamil.tictactoe.databinding.FragmentGridListBinding
-import com.kamil.tictactoe.dialogs.JoinGameDialog.Companion.JSON_RESPONSE
 import com.kamil.tictactoe.grid.GridRecyclerViewAdapter
 
 class Board : AppCompatActivity() {
@@ -24,7 +23,7 @@ class Board : AppCompatActivity() {
         data = intent.getParcelableExtra(JSON_RESPONSE)
 
         val gridLayoutManager = GridLayoutManager(this, 3)
-        val gridRecyclerViewAdapter = GridRecyclerViewAdapter(flattenOutState(data!!.state))
+        val gridRecyclerViewAdapter = GridRecyclerViewAdapter(data!!, flattenOutState(data!!.state))
 
         binding.gridLayout.layoutManager = gridLayoutManager
         binding.gridLayout.adapter = gridRecyclerViewAdapter
@@ -46,6 +45,7 @@ class Board : AppCompatActivity() {
 
     companion object {
         val TAG = "BoardActivity"
+        val JSON_RESPONSE = "json_response"
     }
 
 }

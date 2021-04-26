@@ -1,5 +1,6 @@
 package com.kamil.tictactoe.data
 import android.os.Parcelable
+import android.util.Log
 import kotlinx.android.parcel.Parcelize
 
 typealias StateList = List<List<Int>>
@@ -8,7 +9,7 @@ typealias StateList = List<List<Int>>
 data class GameState(
     val players: MutableList<String>,
     val gameId: String,
-    val state: StateList
+    var state: StateList
 ): Parcelable
 
 /**
@@ -26,18 +27,7 @@ fun flattenOutState(state: StateList): MutableList<Int> {
  * Build state list from [List]
  */
 fun buildStateList(state: List<Int>): StateList {
-    val result = mutableListOf<List<Int>>()
-    val tmpList = mutableListOf<Int>()
-    var count: Int = 0
-    for (element in state) {
-        if (count % 3 == 0) {
-            result.add(tmpList)
-            tmpList.clear()
-        }
-        tmpList.add(element)
-        count++
-    }
-    return result
+    return state.chunked(3)
 }
 
 public val initialState: StateList = listOf(
