@@ -39,11 +39,9 @@ class GridRecyclerViewAdapter(
 
         // When 1 = cross, 2 = circle
         if (item == ITEM_TYPE.CROSS.ordinal) {
-            holder.itemView.background = holder.itemView.resources.getDrawable(R.color.white)
             holder.itemView.foreground = holder.itemView.resources.getDrawable(R.drawable.cross_24)
             holder.itemView.foregroundGravity = Gravity.CENTER
         } else if (item == ITEM_TYPE.CIRCLE.ordinal) {
-            holder.itemView.background = holder.itemView.resources.getDrawable(R.color.white)
             holder.itemView.foreground = holder.itemView.resources.getDrawable(R.drawable.knots)
             holder.itemView.foregroundGravity = Gravity.CENTER
         }
@@ -54,7 +52,6 @@ class GridRecyclerViewAdapter(
             }
 
             // Set CROSS when checked
-            it.background = holder.itemView.resources.getDrawable(R.color.white)
             it.foreground = holder.itemView.resources.getDrawable(R.drawable.cross_24)
             it.foregroundGravity = Gravity.CENTER
 
