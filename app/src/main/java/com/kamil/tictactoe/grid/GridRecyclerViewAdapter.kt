@@ -33,7 +33,7 @@ class GridRecyclerViewAdapter(
             state[position] = 1
 
             // Send data
-            
+
 
             // Start polling
         }

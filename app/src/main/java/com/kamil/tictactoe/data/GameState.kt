@@ -14,7 +14,7 @@ data class GameState(
 /**
  * Flatten out the [StateList]
  */
-fun flattenOutState(state: StateList): List<Int> {
+fun flattenOutState(state: StateList): MutableList<Int> {
     val result = ArrayList<Int>()
     for (element in state) {
         result.addAll(element)
