@@ -2,11 +2,13 @@ package com.kamil.tictactoe.game
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import com.kamil.tictactoe.data.GameState
 import com.kamil.tictactoe.data.flattenOutState
 import com.kamil.tictactoe.databinding.FragmentGridListBinding
 import com.kamil.tictactoe.grid.GridRecyclerViewAdapter
+
 
 class Board : AppCompatActivity() {
 
@@ -24,6 +26,8 @@ class Board : AppCompatActivity() {
 
         val gridLayoutManager = GridLayoutManager(this, 3)
         val gridRecyclerViewAdapter = GridRecyclerViewAdapter(data!!, flattenOutState(data!!.state))
+
+        binding.gameId.text = "Game code: ${data!!.gameId}"
 
         binding.gridLayout.layoutManager = gridLayoutManager
         binding.gridLayout.adapter = gridRecyclerViewAdapter

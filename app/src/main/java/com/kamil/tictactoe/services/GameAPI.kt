@@ -83,7 +83,6 @@ object GameAPI {
 
     fun createGame(requestQueue: RequestQueue1, playerName: String, matchState: StateList, callback: CreateGameCallback) {
         val body = JSONObject()
-
         body.put("player", playerName)
         body.put("state", matchState)
 

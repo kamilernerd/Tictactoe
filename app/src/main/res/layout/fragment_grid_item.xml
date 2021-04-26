@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/item_layout_parent"
-    android:layout_width="100dp"
-    android:layout_height="100dp"
+    android:layout_width="105dp"
+    android:layout_height="105dp"
+    android:layout_margin="10dp"
     android:background="@color/white"
     android:clickable="true"
+    android:clipToPadding="true"
     android:contextClickable="true"
+    android:elevation="@dimen/cardview_default_radius"
     android:orientation="horizontal"
-    android:layout_marginTop="20dp"
-    android:layout_marginStart="20dp">
+    app:layout_goneMarginEnd="5dp">
 
     <TextView
         android:id="@+id/item_number"
