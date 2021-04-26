@@ -53,6 +53,7 @@ class CreateGameDialog: DialogFragment() {
 
     companion object {
         const val TAG = "CreateGameDialog"
+        val JSON_RESPONSE = "json_response"
     }
 
 }

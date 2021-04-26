@@ -55,6 +55,7 @@ class JoinGameDialog: DialogFragment() {
     }
 
     companion object {
+        const val TAG = "JoinGameDialog"
         val JSON_RESPONSE = "json_response"
     }
 
