@@ -6,6 +6,7 @@ import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.google.gson.Gson
 import com.kamil.tictactoe.data.GameState
+import com.kamil.tictactoe.data.StateList
 import org.json.JSONObject
 import com.android.volley.RequestQueue as RequestQueue1
 
@@ -41,7 +42,7 @@ object GameAPI {
         requestQueue.add(request)
     }
 
-    fun createGame(requestQueue: RequestQueue1, playerName: String, matchState: List<List<Int>>, callback: CreateGameCallback) {
+    fun createGame(requestQueue: RequestQueue1, playerName: String, matchState: StateList, callback: CreateGameCallback) {
         val body = JSONObject()
 
         body.put("player", playerName)

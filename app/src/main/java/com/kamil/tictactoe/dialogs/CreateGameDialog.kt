@@ -25,8 +25,11 @@ class CreateGameDialog: DialogFragment() {
             builder.apply {
                 setTitle("Create game")
                 setPositiveButton("Create") { dialog, which ->
-                    if (binding.username.text.toString() != "") {
-                        GameAPI.createGame(Volley.newRequestQueue(context), binding.username.text.toString(), initialState) { json: GameState ->
+
+                    val username = binding.username.text.toString()
+
+                    if (username.isNotEmpty()) {
+                        GameAPI.createGame(Volley.newRequestQueue(context), username, initialState) { json: GameState ->
                             val intent = Intent(builder.context, Board::class.java).apply {
                                 val bundle = Bundle()
                                 bundle.putParcelable(JoinGameDialog.JSON_RESPONSE, json)
