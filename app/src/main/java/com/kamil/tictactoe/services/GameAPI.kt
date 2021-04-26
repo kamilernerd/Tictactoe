@@ -7,6 +7,8 @@ import com.android.volley.toolbox.JsonObjectRequest
 import com.google.gson.Gson
 import com.kamil.tictactoe.data.GameState
 import com.kamil.tictactoe.data.StateList
+import com.kamil.tictactoe.data.buildStateList
+import com.kamil.tictactoe.data.flattenOutState
 import org.json.JSONObject
 import com.android.volley.RequestQueue as RequestQueue1
 
@@ -14,12 +16,47 @@ typealias JoinGameCallback = (gameId: String, json: GameState) -> Unit
 typealias CreateGameCallback = (json: GameState) -> Unit
 typealias PollGameCallback = (json: GameState) -> Unit
 typealias UpdateGameCallback = (json: GameState) -> Unit
+typealias CheckGameStateCallback = (state: StateList, p1winner: Boolean, p2winner: Boolean) -> Unit
 
 object GameAPI {
 
     private const val BASE_URI = "https://api.kamiloracz.no"
     private const val JOIN_GAME = "$BASE_URI/game/join"
     private const val CREATE_GAME = "$BASE_URI/game"
+
+    fun checkGameState(currentState: StateList, callback: CheckGameStateCallback) {
+
+        // There is no reason to do any advanced logic here, simply check for patterns in 3x3 grid
+        // We have only 12 possible outcomes from tictactoe.
+        val state = flattenOutState(currentState)
+
+        if ((state[0] == 1 && state[1] == 1 && state[2] == 1) || // Row 1
+            (state[3] == 1 && state[4] == 1 && state[5] == 1) || // Row 2
+            (state[6] == 1 && state[7] == 1 && state[8] == 1) || // Row 3
+
+            (state[0] == 1 && state[3] == 1 && state[6] == 1) || // Col 1
+            (state[1] == 1 && state[4] == 1 && state[7] == 1) || // Col 2
+            (state[2] == 1 && state[5] == 1 && state[8] == 1) || // Col 3
+
+            (state[0] == 1 && state[4] == 1 && state[8] == 1) || // Cross from row 1 start to row 3 end
+            (state[2] == 1 && state[4] == 1 && state[6] == 1)    // Cross from row 1 end to row 3 start
+        ) {
+            callback(currentState, true, false)
+        } else if (
+            (state[0] == 2 && state[1] == 2 && state[2] == 2) || // Row 1
+            (state[3] == 2 && state[4] == 2 && state[5] == 2) || // Row 2
+            (state[6] == 2 && state[7] == 2 && state[8] == 2) || // Row 3
+
+            (state[0] == 2 && state[3] == 2 && state[6] == 2) || // Col 1
+            (state[1] == 2 && state[4] == 2 && state[7] == 2) || // Col 2
+            (state[2] == 2 && state[5] == 2 && state[8] == 2) || // Col 3
+
+            (state[0] == 2 && state[4] == 2 && state[8] == 2) || // Cross from row 1 start to row 3 end
+            (state[2] == 2 && state[4] == 2 && state[6] == 2)    // Cross from row 1 end to row 3 start
+        ) {
+            callback(currentState, false, true)
+        }
+    }
 
     fun updateGame(requestQueue: RequestQueue1, currentState: GameState, callback: UpdateGameCallback) {
         val body = JSONObject()

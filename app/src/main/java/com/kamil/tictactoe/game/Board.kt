@@ -25,7 +25,7 @@ class Board : AppCompatActivity() {
         data = intent.getParcelableExtra(JSON_RESPONSE)
 
         val gridLayoutManager = GridLayoutManager(this, 3)
-        val gridRecyclerViewAdapter = GridRecyclerViewAdapter(data!!, flattenOutState(data!!.state))
+        val gridRecyclerViewAdapter = GridRecyclerViewAdapter(this, data!!, flattenOutState(data!!.state))
 
         binding.gameId.text = "Game code: ${data!!.gameId}"
 

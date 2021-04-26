@@ -1,5 +1,7 @@
 package com.kamil.tictactoe.grid
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.Gravity
@@ -10,12 +12,10 @@ import android.widget.TextView
 import com.android.volley.toolbox.Volley
 import com.kamil.tictactoe.R
 import com.kamil.tictactoe.data.GameState
-import com.kamil.tictactoe.data.StateList
 import com.kamil.tictactoe.data.buildStateList
-import com.kamil.tictactoe.data.flattenOutState
 import com.kamil.tictactoe.databinding.FragmentGridItemBinding
+import com.kamil.tictactoe.dialogs.GameEndedDialog
 import com.kamil.tictactoe.services.GameAPI
-import org.xmlpull.v1.XmlPullParser
 
 enum class ITEM_TYPE {
     EMPTY,
@@ -24,6 +24,7 @@ enum class ITEM_TYPE {
 }
 
 class GridRecyclerViewAdapter(
+    private val parentContext: Context,
     private val game: GameState,
     private val state: MutableList<Int>
 ) : RecyclerView.Adapter<GridRecyclerViewAdapter.ViewHolder>() {
@@ -39,10 +40,10 @@ class GridRecyclerViewAdapter(
 
         // When 1 = cross, 2 = circle
         if (item == ITEM_TYPE.CROSS.ordinal) {
-            holder.itemView.foreground = holder.itemView.resources.getDrawable(R.drawable.cross_24)
+            holder.itemView.foreground = getDrawable(ITEM_TYPE.CROSS)
             holder.itemView.foregroundGravity = Gravity.CENTER
         } else if (item == ITEM_TYPE.CIRCLE.ordinal) {
-            holder.itemView.foreground = holder.itemView.resources.getDrawable(R.drawable.knots)
+            holder.itemView.foreground = getDrawable(ITEM_TYPE.CIRCLE)
             holder.itemView.foregroundGravity = Gravity.CENTER
         }
 
@@ -52,7 +53,7 @@ class GridRecyclerViewAdapter(
             }
 
             // Set CROSS when checked
-            it.foreground = holder.itemView.resources.getDrawable(R.drawable.cross_24)
+            it.foreground = getDrawable(ITEM_TYPE.CROSS)
             it.foregroundGravity = Gravity.CENTER
 
             // Build current state
@@ -62,13 +63,39 @@ class GridRecyclerViewAdapter(
             val updatedState = buildStateList(state)
             game.state = updatedState
 
+            GameAPI.checkGameState(game.state) { state, p1, p2 ->
+                if (p1) {
+                    Log.println(Log.VERBOSE, TAG, "$state, ${p1.toString()}")
+//                    GameEndedDialog(
+//                        "Congratulations you won!"
+//                    ).show(
+//                        ontext.resources.
+//                    )
+                } else if (p2) {
+                    Log.println(Log.VERBOSE, TAG, "$state, ${p1.toString()}")
+//                    GameEndedDialog(
+//                        "Congratulations you won!"
+//                    ).show(
+//                        ontext.resources.
+//                    )
+                }
+            }
+
             // Send data
             GameAPI.updateGame(Volley.newRequestQueue(holder.itemView.context), game) {
                 // Start polling
-
                 Log.println(Log.VERBOSE, TAG, it.toString())
             }
         }
+    }
+
+    fun getDrawable(type: ITEM_TYPE): Drawable? {
+        if (type == ITEM_TYPE.CROSS) {
+            return parentContext.getDrawable(R.drawable.cross_24)
+        } else if (type == ITEM_TYPE.CIRCLE) {
+            return parentContext.getDrawable(R.drawable.knots)
+        }
+        return null
     }
 
     override fun getItemCount(): Int = state.size
