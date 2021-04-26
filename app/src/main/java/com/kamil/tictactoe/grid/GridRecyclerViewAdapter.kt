@@ -17,6 +17,12 @@ import com.kamil.tictactoe.databinding.FragmentGridItemBinding
 import com.kamil.tictactoe.services.GameAPI
 import org.xmlpull.v1.XmlPullParser
 
+enum class ITEM_TYPE {
+    EMPTY,
+    CROSS,
+    CIRCLE
+}
+
 class GridRecyclerViewAdapter(
     private val game: GameState,
     private val state: MutableList<Int>
@@ -31,8 +37,19 @@ class GridRecyclerViewAdapter(
         val item = state[position]
         holder.idView.text = item.toString()
 
+        // When 1 = cross, 2 = circle
+        if (item == ITEM_TYPE.CROSS.ordinal) {
+            holder.itemView.background = holder.itemView.resources.getDrawable(R.color.white)
+            holder.itemView.foreground = holder.itemView.resources.getDrawable(R.drawable.cross_24)
+            holder.itemView.foregroundGravity = Gravity.CENTER
+        } else if (item == ITEM_TYPE.CIRCLE.ordinal) {
+            holder.itemView.background = holder.itemView.resources.getDrawable(R.color.white)
+            holder.itemView.foreground = holder.itemView.resources.getDrawable(R.drawable.knots)
+            holder.itemView.foregroundGravity = Gravity.CENTER
+        }
+
         holder.itemView.setOnClickListener {
-            if (state[position] != 0) {
+            if (state[position] != ITEM_TYPE.EMPTY.ordinal) {
                 return@setOnClickListener
             }
 
@@ -42,7 +59,7 @@ class GridRecyclerViewAdapter(
             it.foregroundGravity = Gravity.CENTER
 
             // Build current state
-            state[position] = 1
+            state[position] = ITEM_TYPE.CROSS.ordinal
 
             // Prepare new game state object
             val updatedState = buildStateList(state)
