@@ -1,13 +1,9 @@
 package com.kamil.tictactoe.game
 
-import android.app.ActionBar
 import android.os.Bundle
-import android.util.Log
-import android.widget.GridLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.kamil.tictactoe.data.GameState
-import com.kamil.tictactoe.data.buildStateList
 import com.kamil.tictactoe.data.flattenOutState
 import com.kamil.tictactoe.databinding.FragmentGridListBinding
 import com.kamil.tictactoe.dialogs.JoinGameDialog.Companion.JSON_RESPONSE
