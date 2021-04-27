@@ -5,14 +5,18 @@ import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import com.android.volley.toolbox.Volley
+import com.kamil.tictactoe.R
 import com.kamil.tictactoe.data.GameState
 import com.kamil.tictactoe.databinding.DialogJoinGameBinding
 import com.kamil.tictactoe.game.Board
 import com.kamil.tictactoe.api.ServiceAPI
 
-class JoinGameDialog: DialogFragment() {
+class JoinGameDialog(
+    val parent: AppCompatActivity
+): DialogFragment() {
 
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -22,14 +26,14 @@ class JoinGameDialog: DialogFragment() {
         val inflater = requireActivity().layoutInflater
         val binding = DialogJoinGameBinding.inflate(inflater)
 
-        builder.setTitle("Join game")
+        builder.setTitle(getString(R.string.join_game))
 
-        builder.setPositiveButton("Join") { _, _ ->
+        builder.setPositiveButton(getString(R.string.join)) { _, _ ->
             val username = binding.username.text.toString()
             val gameCode = binding.gameCode.text.toString()
 
             if (username.isNotEmpty() && gameCode.isNotEmpty()) {
-                ServiceAPI.joinGame(Volley.newRequestQueue(builder.context), gameCode, username, { _: String, json: GameState ->
+                ServiceAPI.joinGame(parent, Volley.newRequestQueue(builder.context), gameCode, username, { _: String, json: GameState ->
                     val intent = Intent(builder.context, Board::class.java).apply {
                         val bundle = Bundle()
                         bundle.putParcelable(JSON_RESPONSE, json)
@@ -43,7 +47,7 @@ class JoinGameDialog: DialogFragment() {
             }
         }
 
-        builder.setNegativeButton("Cancel") { dialog, _ ->
+        builder.setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
             dialog.cancel()
         }
 

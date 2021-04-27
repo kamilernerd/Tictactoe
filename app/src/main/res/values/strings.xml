@@ -1,4 +1,20 @@
 <resources>
     <string name="app_name">Tictactoe</string>
     <string name="title_activity_main">Main</string>
+    <string name="join_game">Join game</string>
+    <string name="join">Join</string>
+    <string name="cancel">Cancel</string>
+    <string name="create_game">Create game</string>
+    <string name="create">Create</string>
+    <string name="game_code">Game code: </string>
+    <string name="you_won">You won!</string>
+    <string name="you_lost">You lost!</string>
+    <string name="draw">Draw!</string>
+    <string name="player_name">Player name</string>
+    <string name="game_code_no_colon">Game code</string>
+    <!-- ERRORS -->
+    <string name="could_not_create_new_game">Could not create new game!</string>
+    <string name="could_not_join_game">Could not join game!</string>
+    <string name="could_not_pull_game_data">Could not pull game data!</string>
+    <string name="could_not_update_match">Could not update match!</string>
 </resources>

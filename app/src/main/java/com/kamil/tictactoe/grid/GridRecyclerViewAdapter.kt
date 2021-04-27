@@ -53,7 +53,7 @@ class GridRecyclerViewAdapter(
 
             val updatedState = buildCurrentState(state!!, position)
 
-            ServiceAPI.updateGame(Volley.newRequestQueue(holder.itemView.context), game, updatedState, {
+            ServiceAPI.updateGame(parentActivity, Volley.newRequestQueue(holder.itemView.context), game, updatedState, {
                 BLOCK_CLICK = true
             }, {
                 Toast.makeText(parentActivity.applicationContext, it, Toast.LENGTH_SHORT).show();

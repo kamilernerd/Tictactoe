@@ -32,19 +32,19 @@ object GameAPI {
         checkGameState(state) { _, p1winner, p2winner ->
             if (is_host) {
                 if (p1winner) {
-                    playEndingSequence(parentActivity, "You won!")
+                    playEndingSequence(parentActivity, parentActivity.getString(R.string.you_won))
                 } else if (p2winner) {
-                    playEndingSequence(parentActivity, "You lost!")
+                    playEndingSequence(parentActivity, parentActivity.getString(R.string.you_lost))
                 } else if (!p1winner && !p2winner) {
-                    playEndingSequence(parentActivity, "Draw!")
+                    playEndingSequence(parentActivity, parentActivity.getString(R.string.draw))
                 }
             } else {
                 if (p1winner) {
-                    playEndingSequence(parentActivity, "You lost!")
+                    playEndingSequence(parentActivity, parentActivity.getString(R.string.you_lost))
                 } else if (p2winner) {
-                    playEndingSequence(parentActivity, "You won!")
+                    playEndingSequence(parentActivity, parentActivity.getString(R.string.you_won))
                 } else if (!p1winner && !p2winner) {
-                    playEndingSequence(parentActivity, "Draw!")
+                    playEndingSequence(parentActivity, parentActivity.getString(R.string.draw))
                 }
             }
 

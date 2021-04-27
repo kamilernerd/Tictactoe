@@ -1,12 +1,16 @@
 package com.kamil.tictactoe.api
 
 import android.content.Context
+import android.opengl.Visibility
 import android.os.Handler
-import android.util.Log
+import android.view.View
+import android.widget.ProgressBar
+import androidx.appcompat.app.AppCompatActivity
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.google.gson.Gson
+import com.kamil.tictactoe.R
 import com.kamil.tictactoe.data.GameState
 import com.kamil.tictactoe.data.StateList
 import org.json.JSONObject
@@ -46,6 +50,24 @@ object ServiceAPI {
     }
 
     /**
+     * Shows spinner in main activity
+     */
+    private fun showProgressBar(parent: AppCompatActivity) {
+        val progressBar = parent.findViewById<ProgressBar>(R.id.progressBar)
+        progressBar.max = 100
+        progressBar.min = 0
+        progressBar.visibility = View.VISIBLE
+    }
+
+    /**
+     * Hides spinner from main activity
+     */
+    private fun hideProgressBar(parent: AppCompatActivity) {
+        val progressBar = parent.findViewById<ProgressBar>(R.id.progressBar)
+        progressBar.visibility = View.GONE
+    }
+
+    /**
      * Pull game data
      *
      * @param requestQueue [RequestQueue1] Volley request queue
@@ -53,7 +75,7 @@ object ServiceAPI {
      * @param state [StateList] 3x3 matrix of local game state
      * @param callback [UpdateGameCallback] Callback when updating game data went successfully
      */
-    fun updateGame(requestQueue: RequestQueue1, currentState: GameState, state: StateList, callback: UpdateGameCallback, errorCallback: GenericErrorCallback) {
+    fun updateGame(context: Context, requestQueue: RequestQueue1, currentState: GameState, state: StateList, callback: UpdateGameCallback, errorCallback: GenericErrorCallback) {
         val body = JSONObject()
         body.put("gameId", currentState.gameId)
         body.put("players", currentState.players)
@@ -63,7 +85,7 @@ object ServiceAPI {
                 callback(Gson().fromJson(rebuildJsonString(response.toString()), GameState::class.java))
             },
             Response.ErrorListener { error ->
-                errorCallback("Could not update match!")
+                errorCallback(context.getString(R.string.could_not_update_match))
             }) {
             override fun getHeaders(): MutableMap<String, String> {
                 val headers = HashMap<String, String>()
@@ -82,12 +104,12 @@ object ServiceAPI {
      * @param gameId [StateList] Game id to join
      * @param callback [PollGameCallback] Callback when pulling game data went successfully
      */
-    fun pollGame(requestQueue: RequestQueue1, gameId: String, callback: PollGameCallback, errorCallback: GenericErrorCallback) {
+    fun pollGame(context: Context, requestQueue: RequestQueue1, gameId: String, callback: PollGameCallback, errorCallback: GenericErrorCallback) {
         val request = object : JsonObjectRequest(Method.GET, "${BASE_URI}/game/$gameId/poll", null, Response.Listener { response ->
                 callback(Gson().fromJson(rebuildJsonString(response.toString()), GameState::class.java))
             },
             Response.ErrorListener { error ->
-                errorCallback("Could not pull game data!")
+                errorCallback(context.getString(R.string.could_not_pull_game_data))
             }) {
             override fun getHeaders(): MutableMap<String, String> {
                 val headers = HashMap<String, String>()
@@ -107,16 +129,20 @@ object ServiceAPI {
      * @param playerName [String] Game creator name
      * @param callback [JoinGameCallback] Callback when user joined successfully
      */
-    fun joinGame(requestQueue: RequestQueue1, gameId: String, playerName: String, callback: JoinGameCallback, errorCallback: GenericErrorCallback) {
+    fun joinGame(parent: AppCompatActivity, requestQueue: RequestQueue1, gameId: String, playerName: String, callback: JoinGameCallback, errorCallback: GenericErrorCallback) {
         val body = JSONObject()
         body.put("gameId", gameId)
         body.put("player", playerName)
 
+        showProgressBar(parent)
+
         val request = object : JsonObjectRequest(Method.POST, "${BASE_URI}/game/$gameId/join", body, Response.Listener { response ->
+                hideProgressBar(parent)
                 callback(gameId, Gson().fromJson(rebuildJsonString(response.toString()), GameState::class.java))
             },
             Response.ErrorListener { error ->
-                errorCallback("Could not join the game!")
+                hideProgressBar(parent)
+                errorCallback(parent.getString(R.string.could_not_join_game))
             }) {
             override fun getHeaders(): MutableMap<String, String> {
                 val headers = HashMap<String, String>()
@@ -136,15 +162,19 @@ object ServiceAPI {
      * @param matchState [StateList] Initial game state
      * @param callback [CreateGameCallback] Callback when game has been created successfully
      */
-    fun createGame(requestQueue: RequestQueue1, playerName: String, matchState: StateList, callback: CreateGameCallback, errorCallback: GenericErrorCallback) {
+    fun createGame(parent: AppCompatActivity, requestQueue: RequestQueue1, playerName: String, matchState: StateList, callback: CreateGameCallback, errorCallback: GenericErrorCallback) {
         val body = JSONObject()
         body.put("player", playerName)
         body.put("state", matchState)
 
+        showProgressBar(parent)
+
         val request = object : JsonObjectRequest(Method.POST, CREATE_GAME, body, Response.Listener { response ->
+            hideProgressBar(parent)
             callback(Gson().fromJson(rebuildJsonString(response.toString()), GameState::class.java))
         }, Response.ErrorListener { error ->
-            errorCallback("Could not create new game!")
+            hideProgressBar(parent)
+            errorCallback(parent.getString(R.string.could_not_create_new_game))
         }) {
             override fun getHeaders(): MutableMap<String, String> {
                 val headers = HashMap<String, String>()
@@ -171,7 +201,7 @@ object ServiceAPI {
             override fun run() {
                 handler.post {
                     try {
-                        pollGame(Volley.newRequestQueue(context), gameId, {
+                        pollGame(context, Volley.newRequestQueue(context), gameId, {
                             callback(it, timer)
                         }, {
                             errorCallback(it)
