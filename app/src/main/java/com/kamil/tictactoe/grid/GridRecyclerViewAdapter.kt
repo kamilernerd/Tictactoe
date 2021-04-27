@@ -16,7 +16,6 @@ import com.kamil.tictactoe.data.buildStateList
 import com.kamil.tictactoe.data.flattenOutState
 import com.kamil.tictactoe.databinding.FragmentGridItemBinding
 import com.kamil.tictactoe.services.GameAPI
-import com.kamil.tictactoe.services.PLAYER
 
 enum class ITEM_TYPE {
     EMPTY,
@@ -54,19 +53,24 @@ class GridRecyclerViewAdapter(
                 return@setOnClickListener
             }
 
-            // Set cross
             holder.itemView.foreground = getDrawable(ITEM_TYPE.CROSS)
             holder.itemView.foregroundGravity = Gravity.CENTER
 
             val updatedState = buildCurrentState(state!!, position)
 
-            // Send data
             GameAPI.updateGame(Volley.newRequestQueue(holder.itemView.context), game, updatedState) {
                 Log.println(Log.VERBOSE, TAG, it.toString())
             }
         }
     }
 
+    /**
+     * Sets state eiter to 1 or 2 based on [IS_HOST]
+     *
+     * @param state [MutableList] Current flatten state
+     * @param position [Int] Grid item position
+     * @return [StateList]
+     */
     private fun buildCurrentState(state: MutableList<Int>, position: Int): StateList {
         if (IS_HOST) {
             state[position] = ITEM_TYPE.CROSS.ordinal
@@ -76,7 +80,22 @@ class GridRecyclerViewAdapter(
         return buildStateList(state)
     }
 
-    private fun drawForegroundIcon(item: Int, holder: ViewHolder) {
+    /**
+     * Draw CROSS or CIRCLE based on value and game host
+     *
+     * For game host
+     *   Draw CROSS locally for player
+     *   Draw CIRCLE for remote user
+     *
+     * For not game host
+     *   Draw CIRCLE locally for player
+     *   DRAW CROSS for remote user
+     *
+     * @param item [Int] Item position in list
+     * @param holder [ViewHolder] View holder for element
+     * @return [Unit]
+     */
+    private fun drawForegroundIcon(item: Int, holder: ViewHolder): Unit {
         if (IS_HOST) {
             if (item == ITEM_TYPE.CROSS.ordinal) {
                 holder.itemView.foreground = getDrawable(ITEM_TYPE.CROSS)
@@ -96,6 +115,11 @@ class GridRecyclerViewAdapter(
         }
     }
 
+    /**
+     * Draw drawable CROSS or CIRCLE based on passed type
+     * @param type [ITEM_TYPE]
+     * @return [Drawable]
+     */
     private fun getDrawable(type: ITEM_TYPE): Drawable? {
         if (type == ITEM_TYPE.CROSS) {
             return parentActivity.getDrawable(R.drawable.cross_24)
