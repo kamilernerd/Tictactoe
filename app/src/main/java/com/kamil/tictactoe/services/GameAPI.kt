@@ -88,7 +88,16 @@ object GameAPI {
         val request = object : JsonObjectRequest(Method.POST, "$BASE_URI/game/$gameId/join", body,
             Response.Listener { response ->
                 Log.println(Log.VERBOSE, "GameAPI", response.toString())
-                callback(gameId, Gson().fromJson(response.toString(), GameState::class.java))
+
+                val jsonResponse = JSONObject("$response")
+                val state = jsonResponse.getString("state")
+                val players = jsonResponse.getString("players")
+                val gameId = jsonResponse.getString("gameId")
+
+                // Somehow 2d state array is converted to a string of 2d array and makes gson go nuts
+                val customJsonStringHack = "{\"players\": $players, \"gameId\": \"$gameId\", \"state\": $state}"
+
+                callback(gameId, Gson().fromJson(customJsonStringHack, GameState::class.java))
             },
             Response.ErrorListener { error ->
                 Log.println(Log.VERBOSE, "GameAPI response error", error.toString())

@@ -31,7 +31,7 @@ fun buildStateList(state: List<Int>): StateList {
 }
 
 public val initialState: StateList = listOf(
-    listOf(2, 0, 0),
-    listOf(0, 2, 0),
+    listOf(0, 0, 0),
+    listOf(0, 0, 0),
     listOf(0, 0, 0)
 )
