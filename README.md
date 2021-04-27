@@ -10,3 +10,9 @@ Tictactoe spill med følgende funksjonalitet.
 - Error meldinger med toasts hvis serveren feiler å svare
 
 ![alt text](https://raw.githubusercontent.com/kamilernerd/Tictactoe/master/bilder/img1.png?token=AFY7P5BIMOUKDEYOHN3OZDDASGSHU)
+
+
+![alt text](https://raw.githubusercontent.com/kamilernerd/Tictactoe/master/bilder/img3.png?token=AFY7P5AA5NBF4BFZISEHKQTASGSHW)
+
+
+![alt text](https://raw.githubusercontent.com/kamilernerd/Tictactoe/master/bilder/img4.png?token=AFY7P5FKZ4Z7NXIA2BURBBTASGSHY)
