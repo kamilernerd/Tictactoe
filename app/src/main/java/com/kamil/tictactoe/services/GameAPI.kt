@@ -1,10 +1,14 @@
 package com.kamil.tictactoe.services
 
 import android.util.Log
+import android.view.animation.TranslateAnimation
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.google.gson.Gson
+import com.kamil.tictactoe.R
 import com.kamil.tictactoe.data.GameState
 import com.kamil.tictactoe.data.StateList
 import com.kamil.tictactoe.data.buildStateList
@@ -30,8 +34,21 @@ object GameAPI {
     private const val JOIN_GAME = "$BASE_URI/game/join"
     private const val CREATE_GAME = "$BASE_URI/game"
 
-    fun checkGameState(currentState: StateList, callback: CheckGameStateCallback) {
+    fun playEndingSequence(parentActivity: AppCompatActivity, message: String) {
+        val endGameTextView = parentActivity.findViewById<TextView>(R.id.endGameMessage)
+        endGameTextView.text = message
 
+        val translateAnimation = TranslateAnimation(0f, 0f, 0f, -400f)
+        translateAnimation.duration = 1500
+
+        endGameTextView.startAnimation(translateAnimation)
+
+        endGameTextView.postOnAnimationDelayed( {
+            parentActivity.finish()
+        }, 1450)
+    }
+
+    fun checkGameState(currentState: StateList, callback: CheckGameStateCallback) {
         // There is no reason to do any advanced logic here, simply check for patterns in 3x3 grid
         // We have only 8 possible outcomes from tictactoe.
         val state = flattenOutState(currentState)

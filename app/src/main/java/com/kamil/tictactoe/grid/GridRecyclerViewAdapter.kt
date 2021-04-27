@@ -1,7 +1,5 @@
 package com.kamil.tictactoe.grid
 
-import android.annotation.SuppressLint
-import android.content.Context
 import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.Gravity
@@ -9,12 +7,12 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import com.android.volley.toolbox.Volley
 import com.kamil.tictactoe.R
 import com.kamil.tictactoe.data.GameState
 import com.kamil.tictactoe.data.buildStateList
 import com.kamil.tictactoe.databinding.FragmentGridItemBinding
-import com.kamil.tictactoe.dialogs.GameEndedDialog
 import com.kamil.tictactoe.services.GameAPI
 
 enum class ITEM_TYPE {
@@ -24,8 +22,8 @@ enum class ITEM_TYPE {
 }
 
 class GridRecyclerViewAdapter(
-    private val parentContext: Context,
-    private val game: GameState,
+    private val parentActivity: AppCompatActivity,
+    private var game: GameState,
     private val state: MutableList<Int>
 ) : RecyclerView.Adapter<GridRecyclerViewAdapter.ViewHolder>() {
 
@@ -63,37 +61,27 @@ class GridRecyclerViewAdapter(
             val updatedState = buildStateList(state)
             game.state = updatedState
 
-            GameAPI.checkGameState(game.state) { state, p1, p2 ->
-                if (p1) {
-                    Log.println(Log.VERBOSE, TAG, "$state, ${p1.toString()}")
-//                    GameEndedDialog(
-//                        "Congratulations you won!"
-//                    ).show(
-//                        ontext.resources.
-//                    )
-                } else if (p2) {
-                    Log.println(Log.VERBOSE, TAG, "$state, ${p1.toString()}")
-//                    GameEndedDialog(
-//                        "Congratulations you won!"
-//                    ).show(
-//                        ontext.resources.
-//                    )
-                }
+            // Send data and update current game with response
+            GameAPI.updateGame(Volley.newRequestQueue(holder.itemView.context), game) {
+                Log.println(Log.VERBOSE, TAG, it.toString())
+                game = it
             }
 
-            // Send data
-            GameAPI.updateGame(Volley.newRequestQueue(holder.itemView.context), game) {
-                // Start polling
-                Log.println(Log.VERBOSE, TAG, it.toString())
+            GameAPI.checkGameState(game.state) { state, p1, p2 ->
+                if (p1) {
+                    GameAPI.playEndingSequence(parentActivity, "You won!")
+                } else if (p2) {
+                    GameAPI.playEndingSequence(parentActivity, "You lost!")
+                }
             }
         }
     }
 
     fun getDrawable(type: ITEM_TYPE): Drawable? {
         if (type == ITEM_TYPE.CROSS) {
-            return parentContext.getDrawable(R.drawable.cross_24)
+            return parentActivity.getDrawable(R.drawable.cross_24)
         } else if (type == ITEM_TYPE.CIRCLE) {
-            return parentContext.getDrawable(R.drawable.knots)
+            return parentActivity.getDrawable(R.drawable.knots)
         }
         return null
     }
