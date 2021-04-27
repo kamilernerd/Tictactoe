@@ -9,4 +9,4 @@ Tictactoe spill med følgende funksjonalitet.
 - Melding når spiller har vunnet/tapt eller uavgjort
 - Error meldinger med toasts hvis serveren feiler å svare
 
-![alt text](https://github.com/[username]/[reponame]/blob/[branch]/image.jpg?raw=true)
+![alt text](https://raw.githubusercontent.com/kamilernerd/Tictactoe/master/bilder/img1.png?token=AFY7P5BIMOUKDEYOHN3OZDDASGSHU)
