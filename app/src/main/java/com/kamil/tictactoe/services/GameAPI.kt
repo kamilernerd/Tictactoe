@@ -23,9 +23,10 @@ import com.android.volley.RequestQueue as RequestQueue1
 
 typealias JoinGameCallback = (gameId: String, json: GameState) -> Unit
 typealias CreateGameCallback = (json: GameState) -> Unit
-typealias PollGameCallback = (json: GameState) -> Unit
 typealias UpdateGameCallback = (json: GameState) -> Unit
 typealias CheckGameStateCallback = (state: StateList, p1winner: Boolean, p2winner: Boolean) -> Unit
+typealias PollGameCallback = (json: GameState) -> Unit
+typealias PullDataCallback = (data: GameState, timer: Timer) -> Unit
 
 enum class PLAYER {
     NONE,
@@ -237,7 +238,15 @@ object GameAPI {
         return false
     }
 
-    fun pollDataTimer(context: Context, gameId: String, callback: (data: GameState, timer: Timer) -> Unit): Timer {
+    /**
+     * Pulls data from backend every 5 seconds
+     *
+     * @param context [Context] Current context
+     * @param gameId [String] Game id to pull from
+     * @param callback [PullDataCallback] Callback function
+     * @return [Timer]
+     */
+    fun pollDataTimer(context: Context, gameId: String, callback: PullDataCallback): Timer {
         val handler = Handler()
         val timer = Timer()
         val doAsynchronousTask: TimerTask = object : TimerTask() {
