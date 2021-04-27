@@ -1,5 +1,7 @@
 package com.kamil.tictactoe.services
 
+import android.content.Context
+import android.os.Handler
 import android.util.Log
 import android.view.animation.TranslateAnimation
 import android.widget.TextView
@@ -7,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
 import com.google.gson.Gson
 import com.kamil.tictactoe.R
 import com.kamil.tictactoe.data.GameState
@@ -14,6 +17,8 @@ import com.kamil.tictactoe.data.StateList
 import com.kamil.tictactoe.data.buildStateList
 import com.kamil.tictactoe.data.flattenOutState
 import org.json.JSONObject
+import java.util.*
+import kotlin.collections.HashMap
 import com.android.volley.RequestQueue as RequestQueue1
 
 typealias JoinGameCallback = (gameId: String, json: GameState) -> Unit
@@ -34,7 +39,27 @@ object GameAPI {
     private const val JOIN_GAME = "$BASE_URI/game/join"
     private const val CREATE_GAME = "$BASE_URI/game"
 
-    fun playEndingSequence(parentActivity: AppCompatActivity, message: String) {
+    fun showWinnerLoser(is_host: Boolean, parentActivity: AppCompatActivity, state: StateList, timer: Timer) {
+        checkGameState(state) { _, p1winner, p2winner ->
+            if (is_host) {
+                if (p1winner) {
+                    playEndingSequence(parentActivity, "You won!")
+                } else if (p2winner) {
+                    playEndingSequence(parentActivity, "You lost!")
+                }
+            } else {
+                if (p1winner) {
+                    playEndingSequence(parentActivity, "You lost!")
+                } else if (p2winner) {
+                    playEndingSequence(parentActivity, "You won!")
+                }
+            }
+
+            timer.cancel()
+        }
+    }
+
+    private fun playEndingSequence(parentActivity: AppCompatActivity, message: String) {
         val endGameTextView = parentActivity.findViewById<TextView>(R.id.endGameMessage)
         endGameTextView.text = message
 
@@ -48,7 +73,7 @@ object GameAPI {
         }, 1450)
     }
 
-    fun checkGameState(currentState: StateList, callback: CheckGameStateCallback) {
+    private fun checkGameState(currentState: StateList, callback: CheckGameStateCallback) {
         // There is no reason to do any advanced logic here, simply check for patterns in 3x3 grid
         // We have only 8 possible outcomes from tictactoe.
         val state = flattenOutState(currentState)
@@ -60,15 +85,15 @@ object GameAPI {
         }
     }
 
-    fun updateGame(requestQueue: RequestQueue1, currentState: GameState, callback: UpdateGameCallback) {
+    fun updateGame(requestQueue: RequestQueue1, currentState: GameState, state: StateList, callback: UpdateGameCallback) {
         val body = JSONObject()
         body.put("gameId", currentState.gameId)
         body.put("players", currentState.players)
-        body.put("state", currentState.state)
+        body.put("state", state)
 
         val request = object : JsonObjectRequest(Method.POST, "$BASE_URI/game/${currentState.gameId}/update", body,
             Response.Listener { response ->
-                Log.println(Log.VERBOSE, "GameAPI", response.toString())
+                Log.println(Log.VERBOSE, "GameAPI UPDATE", response.toString())
 
                 val jsonResponse = JSONObject("$response")
                 val state = jsonResponse.getString("state")
@@ -94,7 +119,31 @@ object GameAPI {
     }
 
     fun pollGame(requestQueue: RequestQueue1, gameId: String, callback: PollGameCallback) {
-        /* TODO */
+        val request = object : JsonObjectRequest(Method.GET, "$BASE_URI/game/$gameId/poll", null,
+            Response.Listener { response ->
+                Log.println(Log.VERBOSE, "GameAPI POLL", response.toString())
+
+                val jsonResponse = JSONObject("$response")
+                val state = jsonResponse.getString("state")
+                val players = jsonResponse.getString("players")
+                val gameId = jsonResponse.getString("gameId")
+
+                // Somehow 2d state array is converted to a string of 2d array and makes gson go nuts
+                val customJsonStringHack = "{\"players\": $players, \"gameId\": \"$gameId\", \"state\": $state}"
+                val decodedJson = Gson().fromJson(customJsonStringHack, GameState::class.java)
+                callback(decodedJson)
+            },
+            Response.ErrorListener { error ->
+                Log.println(Log.VERBOSE, "GameAPI response error", error.toString())
+            }) {
+            override fun getHeaders(): MutableMap<String, String> {
+                val headers = HashMap<String, String>()
+                headers["Content-Type"] = "application/json"
+                headers["Game-Service-Key"] = "TestKey"
+                return headers
+            }
+        }
+        requestQueue.add(request)
     }
 
     fun joinGame(requestQueue: RequestQueue1, gameId: String, playerName: String, callback: JoinGameCallback) {
@@ -104,7 +153,7 @@ object GameAPI {
 
         val request = object : JsonObjectRequest(Method.POST, "$BASE_URI/game/$gameId/join", body,
             Response.Listener { response ->
-                Log.println(Log.VERBOSE, "GameAPI", response.toString())
+                Log.println(Log.VERBOSE, "GameAPI JOIN", response.toString())
 
                 val jsonResponse = JSONObject("$response")
                 val state = jsonResponse.getString("state")
@@ -134,7 +183,7 @@ object GameAPI {
         body.put("player", playerName)
         body.put("state", matchState)
 
-        Log.println(Log.VERBOSE, "GameAPI", CREATE_GAME)
+        Log.println(Log.VERBOSE, "GameAPI CREATE", CREATE_GAME)
 
         val request = object : JsonObjectRequest(Request.Method.POST, CREATE_GAME, body, Response.Listener { response ->
             val jsonResponse = JSONObject("$response")
@@ -186,6 +235,26 @@ object GameAPI {
             return true
         }
         return false
+    }
+
+    fun pollDataTimer(context: Context, gameId: String, callback: (data: GameState, timer: Timer) -> Unit): Timer {
+        val handler = Handler()
+        val timer = Timer()
+        val doAsynchronousTask: TimerTask = object : TimerTask() {
+            override fun run() {
+                handler.post(Runnable {
+                    try {
+                        pollGame(Volley.newRequestQueue(context), gameId) {
+                            callback(it, timer)
+                        }
+                    } catch (e: Exception) {
+                        // TODO Auto-generated catch block
+                    }
+                })
+            }
+        }
+        timer.schedule(doAsynchronousTask, 0, 5000) //execute in every 50000 ms
+        return timer
     }
 
 }

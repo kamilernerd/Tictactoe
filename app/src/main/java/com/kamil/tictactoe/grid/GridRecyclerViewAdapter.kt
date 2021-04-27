@@ -12,8 +12,10 @@ import com.android.volley.toolbox.Volley
 import com.kamil.tictactoe.R
 import com.kamil.tictactoe.data.GameState
 import com.kamil.tictactoe.data.buildStateList
+import com.kamil.tictactoe.data.flattenOutState
 import com.kamil.tictactoe.databinding.FragmentGridItemBinding
 import com.kamil.tictactoe.services.GameAPI
+import com.kamil.tictactoe.services.PLAYER
 
 enum class ITEM_TYPE {
     EMPTY,
@@ -24,55 +26,66 @@ enum class ITEM_TYPE {
 class GridRecyclerViewAdapter(
     private val parentActivity: AppCompatActivity,
     private var game: GameState,
-    private val state: MutableList<Int>
+    private val IS_HOST: Boolean
 ) : RecyclerView.Adapter<GridRecyclerViewAdapter.ViewHolder>() {
+
+    private var state: MutableList<Int>? = null
 
     inner class ViewHolder(binding: FragmentGridItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         val idView: TextView = binding.itemNumber
     }
 
+    override fun onViewAttachedToWindow(holder: ViewHolder) {
+        super.onViewAttachedToWindow(holder)
+    }
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = state[position]
+        state = flattenOutState(game.state)
+
+        val item = state!![position]
         holder.idView.text = item.toString()
 
-        // When 1 = cross, 2 = circle
-        if (item == ITEM_TYPE.CROSS.ordinal) {
-            holder.itemView.foreground = getDrawable(ITEM_TYPE.CROSS)
-            holder.itemView.foregroundGravity = Gravity.CENTER
-        } else if (item == ITEM_TYPE.CIRCLE.ordinal) {
-            holder.itemView.foreground = getDrawable(ITEM_TYPE.CIRCLE)
-            holder.itemView.foregroundGravity = Gravity.CENTER
+        if (IS_HOST) {
+            if (item == ITEM_TYPE.CROSS.ordinal) {
+                holder.itemView.foreground = getDrawable(ITEM_TYPE.CROSS)
+                holder.itemView.foregroundGravity = Gravity.CENTER
+            } else if (item == ITEM_TYPE.CIRCLE.ordinal) {
+                holder.itemView.foreground = getDrawable(ITEM_TYPE.CIRCLE)
+                holder.itemView.foregroundGravity = Gravity.CENTER
+            }
+        } else {
+            if (item == ITEM_TYPE.CIRCLE.ordinal) {
+                holder.itemView.foreground = getDrawable(ITEM_TYPE.CROSS)
+                holder.itemView.foregroundGravity = Gravity.CENTER
+            } else if (item == ITEM_TYPE.CROSS.ordinal) {
+                holder.itemView.foreground = getDrawable(ITEM_TYPE.CIRCLE)
+                holder.itemView.foregroundGravity = Gravity.CENTER
+            }
         }
 
         holder.itemView.setOnClickListener {
-            if (state[position] != ITEM_TYPE.EMPTY.ordinal) {
+            if (state!![position] != ITEM_TYPE.EMPTY.ordinal) {
                 return@setOnClickListener
             }
 
-            // Set CROSS when checked
-            it.foreground = getDrawable(ITEM_TYPE.CROSS)
-            it.foregroundGravity = Gravity.CENTER
+            // Set cross
+            holder.itemView.foreground = getDrawable(ITEM_TYPE.CROSS)
+            holder.itemView.foregroundGravity = Gravity.CENTER
 
             // Build current state
-            state[position] = ITEM_TYPE.CROSS.ordinal
-
-            // Prepare new game state object
-            val updatedState = buildStateList(state)
-            game.state = updatedState
-
-            // Send data and update current game with response
-            GameAPI.updateGame(Volley.newRequestQueue(holder.itemView.context), game) {
-                Log.println(Log.VERBOSE, TAG, it.toString())
-                game = it
+            if (IS_HOST) {
+                state!![position] = ITEM_TYPE.CROSS.ordinal
+            } else {
+                state!![position] = ITEM_TYPE.CIRCLE.ordinal
             }
 
-            GameAPI.checkGameState(game.state) { state, p1, p2 ->
-                if (p1) {
-                    GameAPI.playEndingSequence(parentActivity, "You won!")
-                } else if (p2) {
-                    GameAPI.playEndingSequence(parentActivity, "You lost!")
-                }
+            // Prepare new game state object
+            val updatedState = buildStateList(state!!)
+
+            // Send data
+            GameAPI.updateGame(Volley.newRequestQueue(holder.itemView.context), game, updatedState) {
+                Log.println(Log.VERBOSE, TAG, it.toString())
             }
         }
     }
@@ -86,10 +99,9 @@ class GridRecyclerViewAdapter(
         return null
     }
 
-    override fun getItemCount(): Int = state.size
+    override fun getItemCount(): Int = flattenOutState(game.state).size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-
         return ViewHolder(
             FragmentGridItemBinding.inflate(
                 LayoutInflater.from(parent.context),
