@@ -18,6 +18,12 @@ typealias PollGameCallback = (json: GameState) -> Unit
 typealias UpdateGameCallback = (json: GameState) -> Unit
 typealias CheckGameStateCallback = (state: StateList, p1winner: Boolean, p2winner: Boolean) -> Unit
 
+enum class PLAYER {
+    NONE,
+    P1,
+    P2
+}
+
 object GameAPI {
 
     private const val BASE_URI = "https://api.kamiloracz.no"
@@ -27,33 +33,12 @@ object GameAPI {
     fun checkGameState(currentState: StateList, callback: CheckGameStateCallback) {
 
         // There is no reason to do any advanced logic here, simply check for patterns in 3x3 grid
-        // We have only 12 possible outcomes from tictactoe.
+        // We have only 8 possible outcomes from tictactoe.
         val state = flattenOutState(currentState)
 
-        if ((state[0] == 1 && state[1] == 1 && state[2] == 1) || // Row 1
-            (state[3] == 1 && state[4] == 1 && state[5] == 1) || // Row 2
-            (state[6] == 1 && state[7] == 1 && state[8] == 1) || // Row 3
-
-            (state[0] == 1 && state[3] == 1 && state[6] == 1) || // Col 1
-            (state[1] == 1 && state[4] == 1 && state[7] == 1) || // Col 2
-            (state[2] == 1 && state[5] == 1 && state[8] == 1) || // Col 3
-
-            (state[0] == 1 && state[4] == 1 && state[8] == 1) || // Cross from row 1 start to row 3 end
-            (state[2] == 1 && state[4] == 1 && state[6] == 1)    // Cross from row 1 end to row 3 start
-        ) {
+        if (checkRows(state, PLAYER.P1) || checkCols(state, PLAYER.P1) || checkAcross(state, PLAYER.P1)) {
             callback(currentState, true, false)
-        } else if (
-            (state[0] == 2 && state[1] == 2 && state[2] == 2) || // Row 1
-            (state[3] == 2 && state[4] == 2 && state[5] == 2) || // Row 2
-            (state[6] == 2 && state[7] == 2 && state[8] == 2) || // Row 3
-
-            (state[0] == 2 && state[3] == 2 && state[6] == 2) || // Col 1
-            (state[1] == 2 && state[4] == 2 && state[7] == 2) || // Col 2
-            (state[2] == 2 && state[5] == 2 && state[8] == 2) || // Col 3
-
-            (state[0] == 2 && state[4] == 2 && state[8] == 2) || // Cross from row 1 start to row 3 end
-            (state[2] == 2 && state[4] == 2 && state[6] == 2)    // Cross from row 1 end to row 3 start
-        ) {
+        } else if (checkRows(state, PLAYER.P2) || checkCols(state, PLAYER.P2) || checkAcross(state, PLAYER.P2)) {
             callback(currentState, false, true)
         }
     }
@@ -147,4 +132,34 @@ object GameAPI {
         }
         requestQueue.add(request)
     }
+
+    private fun checkRows(state: MutableList<Int>, player: PLAYER): Boolean {
+        if ((state[0] == player.ordinal && state[1] == player.ordinal && state[2] == player.ordinal) || // Row 1
+            (state[3] == player.ordinal && state[4] == player.ordinal && state[5] == player.ordinal) || // Row 2
+            (state[6] == player.ordinal && state[7] == player.ordinal && state[8] == player.ordinal)    // Row 3
+        ) {
+            return true
+        }
+        return false
+    }
+
+    private fun checkCols(state: MutableList<Int>, player: PLAYER): Boolean {
+        if ((state[0] == player.ordinal && state[3] == player.ordinal && state[6] == player.ordinal) || // Col 1
+            (state[1] == player.ordinal && state[4] == player.ordinal && state[7] == player.ordinal) || // Col 2
+            (state[2] == player.ordinal && state[5] == player.ordinal && state[8] == player.ordinal)    // Col 3
+        ) {
+            return true
+        }
+        return false
+    }
+
+    private fun checkAcross(state: MutableList<Int>, player: PLAYER): Boolean {
+        if ((state[0] == player.ordinal && state[4] == player.ordinal && state[8] == player.ordinal) || // Cross from row 1 start to row 3 end
+            (state[2] == player.ordinal && state[4] == player.ordinal && state[6] == player.ordinal)    // Cross from row 1 end to row 3 start)
+        ) {
+            return true
+        }
+        return false
+    }
+
 }
