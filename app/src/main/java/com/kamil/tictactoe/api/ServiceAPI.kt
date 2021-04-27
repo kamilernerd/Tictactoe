@@ -155,7 +155,7 @@ object ServiceAPI {
      * @param callback [PullDataCallback] Callback function
      * @return [Timer]
      */
-    fun pollDataTimer(context: Context, gameId: String, callback: PullDataCallback): Timer {
+    fun startPolling(context: Context, gameId: String, callback: PullDataCallback): Timer {
         val handler = Handler()
         val timer = Timer()
         val doAsynchronousTask: TimerTask = object : TimerTask() {

@@ -35,7 +35,7 @@ class Board : AppCompatActivity() {
         binding.gridLayout.layoutManager = gridLayoutManager
         binding.gridLayout.adapter = gridRecyclerViewAdapter
 
-        ServiceAPI.pollDataTimer(this, data!!.gameId) { data: GameState, timer: Timer ->
+        ServiceAPI.startPolling(this, data!!.gameId) { data: GameState, timer: Timer ->
             binding.gridLayout.adapter = GridRecyclerViewAdapter(this, data, IS_HOST)
             GameAPI.showWinnerLoser(IS_HOST, this, data.state, timer)
         }
