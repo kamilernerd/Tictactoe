@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import com.android.volley.toolbox.Volley
 import com.kamil.tictactoe.data.GameState
@@ -13,7 +14,9 @@ import com.kamil.tictactoe.databinding.DialogCreateGameBinding
 import com.kamil.tictactoe.game.Board
 import com.kamil.tictactoe.api.ServiceAPI
 
-class CreateGameDialog: DialogFragment() {
+class CreateGameDialog(
+    val parent: AppCompatActivity
+): DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder: AlertDialog.Builder = AlertDialog.Builder(context)
@@ -24,7 +27,7 @@ class CreateGameDialog: DialogFragment() {
         builder.setPositiveButton("Create") { _, _ ->
             val username = binding.username.text.toString()
             if (username.isNotEmpty()) {
-                ServiceAPI.createGame(Volley.newRequestQueue(context), username, initialState, { json: GameState ->
+                ServiceAPI.createGame(parent, Volley.newRequestQueue(context), username, initialState, { json: GameState ->
                     val intent = Intent(builder.context, Board::class.java).apply {
                         val bundle = Bundle()
                         bundle.putParcelable(JSON_RESPONSE, json)

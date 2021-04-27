@@ -1,12 +1,16 @@
 package com.kamil.tictactoe.api
 
 import android.content.Context
+import android.opengl.Visibility
 import android.os.Handler
-import android.util.Log
+import android.view.View
+import android.widget.ProgressBar
+import androidx.appcompat.app.AppCompatActivity
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.google.gson.Gson
+import com.kamil.tictactoe.R
 import com.kamil.tictactoe.data.GameState
 import com.kamil.tictactoe.data.StateList
 import org.json.JSONObject
@@ -43,6 +47,24 @@ object ServiceAPI {
 
         // Somehow 2d state array is converted to a string of 2d array and makes gson go nuts
         return "{\"players\": $players, \"gameId\": \"$gameId\", \"state\": $state}"
+    }
+
+    /**
+     * Shows spinner in main activity
+     */
+    private fun showProgressBar(parent: AppCompatActivity) {
+        val progressBar = parent.findViewById<ProgressBar>(R.id.progressBar)
+        progressBar.max = 100
+        progressBar.min = 0
+        progressBar.visibility = View.VISIBLE
+    }
+
+    /**
+     * Hides spinner from main activity
+     */
+    private fun hideProgressBar(parent: AppCompatActivity) {
+        val progressBar = parent.findViewById<ProgressBar>(R.id.progressBar)
+        progressBar.visibility = View.GONE
     }
 
     /**
@@ -107,12 +129,15 @@ object ServiceAPI {
      * @param playerName [String] Game creator name
      * @param callback [JoinGameCallback] Callback when user joined successfully
      */
-    fun joinGame(requestQueue: RequestQueue1, gameId: String, playerName: String, callback: JoinGameCallback, errorCallback: GenericErrorCallback) {
+    fun joinGame(parent: AppCompatActivity, requestQueue: RequestQueue1, gameId: String, playerName: String, callback: JoinGameCallback, errorCallback: GenericErrorCallback) {
         val body = JSONObject()
         body.put("gameId", gameId)
         body.put("player", playerName)
 
+        showProgressBar(parent)
+
         val request = object : JsonObjectRequest(Method.POST, "${BASE_URI}/game/$gameId/join", body, Response.Listener { response ->
+                hideProgressBar(parent)
                 callback(gameId, Gson().fromJson(rebuildJsonString(response.toString()), GameState::class.java))
             },
             Response.ErrorListener { error ->
@@ -136,12 +161,15 @@ object ServiceAPI {
      * @param matchState [StateList] Initial game state
      * @param callback [CreateGameCallback] Callback when game has been created successfully
      */
-    fun createGame(requestQueue: RequestQueue1, playerName: String, matchState: StateList, callback: CreateGameCallback, errorCallback: GenericErrorCallback) {
+    fun createGame(parent: AppCompatActivity, requestQueue: RequestQueue1, playerName: String, matchState: StateList, callback: CreateGameCallback, errorCallback: GenericErrorCallback) {
         val body = JSONObject()
         body.put("player", playerName)
         body.put("state", matchState)
 
+        showProgressBar(parent)
+
         val request = object : JsonObjectRequest(Method.POST, CREATE_GAME, body, Response.Listener { response ->
+            hideProgressBar(parent)
             callback(Gson().fromJson(rebuildJsonString(response.toString()), GameState::class.java))
         }, Response.ErrorListener { error ->
             errorCallback("Could not create new game!")

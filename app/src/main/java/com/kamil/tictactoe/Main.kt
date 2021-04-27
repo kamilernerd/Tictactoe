@@ -1,6 +1,7 @@
 package com.kamil.tictactoe
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.kamil.tictactoe.databinding.MainBinding
 import com.kamil.tictactoe.dialogs.CreateGameDialog
@@ -20,14 +21,14 @@ class Main : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         binding.joinGameButton.setOnClickListener {
-            JoinGameDialog().show(
+            JoinGameDialog(this).show(
                 supportFragmentManager,
                 "Join game dialog"
             )
         }
 
         binding.createGameButton.setOnClickListener {
-            CreateGameDialog().show(
+            CreateGameDialog(this).show(
                 supportFragmentManager,
                 "Create game dialog"
             )
