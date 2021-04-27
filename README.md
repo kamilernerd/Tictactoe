@@ -9,7 +9,7 @@ Tictactoe spill med følgende funksjonalitet.
 - Spill logikk separert fra server logikk
 - Melding når spiller har vunnet/tapt eller uavgjort (Animasjon som glir opp fra ca. Midten av skjermen)
 - Error meldinger med toasts hvis serveren feiler å svare
-- Indicator når man blir med i et spill eller oppretter nytt spill
+- Loading indikator når man blir med i et spill eller oppretter nytt spill
 
 ![alt text](https://raw.githubusercontent.com/kamilernerd/Tictactoe/master/bilder/img1.png?token=AFY7P5BIMOUKDEYOHN3OZDDASGSHU)
 
