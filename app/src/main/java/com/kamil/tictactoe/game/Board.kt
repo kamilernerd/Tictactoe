@@ -1,16 +1,12 @@
 package com.kamil.tictactoe.game
 
 import android.os.Bundle
-import android.os.Handler
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
-import com.android.volley.toolbox.Volley
 import com.kamil.tictactoe.data.GameState
-import com.kamil.tictactoe.data.flattenOutState
 import com.kamil.tictactoe.databinding.FragmentGridListBinding
 import com.kamil.tictactoe.grid.GridRecyclerViewAdapter
-import com.kamil.tictactoe.services.GameAPI
+import com.kamil.tictactoe.api.GameAPI
 import java.util.*
 
 

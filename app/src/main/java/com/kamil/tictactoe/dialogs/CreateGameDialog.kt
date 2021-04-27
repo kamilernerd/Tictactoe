@@ -4,14 +4,13 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.DialogFragment
 import com.android.volley.toolbox.Volley
 import com.kamil.tictactoe.data.GameState
 import com.kamil.tictactoe.data.initialState
 import com.kamil.tictactoe.databinding.DialogCreateGameBinding
 import com.kamil.tictactoe.game.Board
-import com.kamil.tictactoe.services.GameAPI
+import com.kamil.tictactoe.api.GameAPI
 
 class CreateGameDialog: DialogFragment() {
 

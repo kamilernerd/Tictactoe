@@ -6,7 +6,6 @@ import android.view.Gravity
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.android.volley.toolbox.Volley
 import com.kamil.tictactoe.R
@@ -15,7 +14,7 @@ import com.kamil.tictactoe.data.StateList
 import com.kamil.tictactoe.data.buildStateList
 import com.kamil.tictactoe.data.flattenOutState
 import com.kamil.tictactoe.databinding.FragmentGridItemBinding
-import com.kamil.tictactoe.services.GameAPI
+import com.kamil.tictactoe.api.GameAPI
 
 enum class ITEM_TYPE {
     EMPTY,
