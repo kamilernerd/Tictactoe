@@ -16,27 +16,27 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:id="@+id/tictactoeWelcomeText"
-        android:layout_width="300dp"
-        android:layout_height="53dp"
-        android:text="Tic tac toe"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.504"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.265" />
-
     <Button
         android:id="@+id/joinGameButton"
         android:layout_width="300dp"
         android:layout_height="50dp"
-        android:layout_marginTop="96dp"
         android:layout_marginBottom="24dp"
         android:text="Join game"
         app:layout_constraintBottom_toTopOf="@+id/createGameButton"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:layout_marginBottom="44dp"
+        app:layout_constraintBottom_toTopOf="@+id/joinGameButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tictactoeWelcomeText" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.687"
+        app:srcCompat="@drawable/grid_background" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
