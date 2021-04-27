@@ -1,6 +1,7 @@
 package com.kamil.tictactoe.game
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.kamil.tictactoe.data.GameState
@@ -35,10 +36,12 @@ class Board : AppCompatActivity() {
         binding.gridLayout.layoutManager = gridLayoutManager
         binding.gridLayout.adapter = gridRecyclerViewAdapter
 
-        ServiceAPI.startPolling(this, data!!.gameId) { data: GameState, timer: Timer ->
+        ServiceAPI.startPolling(this, data!!.gameId, { data: GameState, timer: Timer ->
             binding.gridLayout.adapter = GridRecyclerViewAdapter(this, data, isHost)
             GameAPI.showWinnerLoser(isHost, this, data.state, timer)
-        }
+        }, {
+            Toast.makeText(applicationContext, it, Toast.LENGTH_SHORT).show();
+        })
     }
 
     override fun onStart() {

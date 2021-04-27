@@ -6,6 +6,7 @@ import android.view.Gravity
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.android.volley.toolbox.Volley
 import com.kamil.tictactoe.R
@@ -51,9 +52,11 @@ class GridRecyclerViewAdapter(
 
             val updatedState = buildCurrentState(state!!, position)
 
-            ServiceAPI.updateGame(Volley.newRequestQueue(holder.itemView.context), game, updatedState) {
+            ServiceAPI.updateGame(Volley.newRequestQueue(holder.itemView.context), game, updatedState, {
                 Log.println(Log.VERBOSE, TAG, it.toString())
-            }
+            }, {
+                Toast.makeText(parentActivity.applicationContext, it, Toast.LENGTH_SHORT).show();
+            })
         }
     }
 

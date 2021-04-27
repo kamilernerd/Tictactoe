@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.android.volley.toolbox.Volley
 import com.kamil.tictactoe.data.GameState
@@ -28,7 +29,7 @@ class JoinGameDialog: DialogFragment() {
             val gameCode = binding.gameCode.text.toString()
 
             if (username.isNotEmpty() && gameCode.isNotEmpty()) {
-                ServiceAPI.joinGame(Volley.newRequestQueue(builder.context), gameCode, username) { _: String, json: GameState ->
+                ServiceAPI.joinGame(Volley.newRequestQueue(builder.context), gameCode, username, { _: String, json: GameState ->
                     val intent = Intent(builder.context, Board::class.java).apply {
                         val bundle = Bundle()
                         bundle.putParcelable(JSON_RESPONSE, json)
@@ -36,7 +37,9 @@ class JoinGameDialog: DialogFragment() {
                         putExtra(IS_HOST, false)
                     }
                     builder.context.startActivity(intent)
-                }
+                }, {
+                    Toast.makeText(builder.context, it, Toast.LENGTH_SHORT).show();
+                })
             }
         }
 

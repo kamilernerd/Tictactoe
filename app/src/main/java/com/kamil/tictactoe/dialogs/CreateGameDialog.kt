@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.android.volley.toolbox.Volley
 import com.kamil.tictactoe.data.GameState
@@ -23,11 +24,7 @@ class CreateGameDialog: DialogFragment() {
         builder.setPositiveButton("Create") { _, _ ->
             val username = binding.username.text.toString()
             if (username.isNotEmpty()) {
-                ServiceAPI.createGame(
-                    Volley.newRequestQueue(context),
-                    username,
-                    initialState
-                ) { json: GameState ->
+                ServiceAPI.createGame(Volley.newRequestQueue(context), username, initialState, { json: GameState ->
                     val intent = Intent(builder.context, Board::class.java).apply {
                         val bundle = Bundle()
                         bundle.putParcelable(JSON_RESPONSE, json)
@@ -35,7 +32,9 @@ class CreateGameDialog: DialogFragment() {
                         putExtra(IS_HOST, true)
                     }
                     builder.context.startActivity(intent)
-                }
+                }, {
+                    Toast.makeText(builder.context, it, Toast.LENGTH_SHORT).show();
+                })
             }
         }
 
