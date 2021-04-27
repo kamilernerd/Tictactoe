@@ -10,7 +10,7 @@ import com.kamil.tictactoe.data.GameState
 import com.kamil.tictactoe.data.initialState
 import com.kamil.tictactoe.databinding.DialogCreateGameBinding
 import com.kamil.tictactoe.game.Board
-import com.kamil.tictactoe.api.GameAPI
+import com.kamil.tictactoe.api.ServiceAPI
 
 class CreateGameDialog: DialogFragment() {
 
@@ -28,7 +28,7 @@ class CreateGameDialog: DialogFragment() {
                     val username = binding.username.text.toString()
 
                     if (username.isNotEmpty()) {
-                        GameAPI.createGame(Volley.newRequestQueue(context), username, initialState) { json: GameState ->
+                        ServiceAPI.createGame(Volley.newRequestQueue(context), username, initialState) { json: GameState ->
                             val intent = Intent(builder.context, Board::class.java).apply {
                                 val bundle = Bundle()
                                 bundle.putParcelable(JSON_RESPONSE, json)

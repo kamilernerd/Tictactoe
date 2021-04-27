@@ -7,6 +7,7 @@ import com.kamil.tictactoe.data.GameState
 import com.kamil.tictactoe.databinding.FragmentGridListBinding
 import com.kamil.tictactoe.grid.GridRecyclerViewAdapter
 import com.kamil.tictactoe.api.GameAPI
+import com.kamil.tictactoe.api.ServiceAPI
 import java.util.*
 
 
@@ -34,7 +35,7 @@ class Board : AppCompatActivity() {
         binding.gridLayout.layoutManager = gridLayoutManager
         binding.gridLayout.adapter = gridRecyclerViewAdapter
 
-        GameAPI.pollDataTimer(this, data!!.gameId) { data: GameState, timer: Timer ->
+        ServiceAPI.pollDataTimer(this, data!!.gameId) { data: GameState, timer: Timer ->
             binding.gridLayout.adapter = GridRecyclerViewAdapter(this, data, IS_HOST)
             GameAPI.showWinnerLoser(IS_HOST, this, data.state, timer)
         }

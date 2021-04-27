@@ -14,7 +14,7 @@ import com.kamil.tictactoe.data.StateList
 import com.kamil.tictactoe.data.buildStateList
 import com.kamil.tictactoe.data.flattenOutState
 import com.kamil.tictactoe.databinding.FragmentGridItemBinding
-import com.kamil.tictactoe.api.GameAPI
+import com.kamil.tictactoe.api.ServiceAPI
 
 enum class ITEM_TYPE {
     EMPTY,
@@ -51,7 +51,7 @@ class GridRecyclerViewAdapter(
 
             val updatedState = buildCurrentState(state!!, position)
 
-            GameAPI.updateGame(Volley.newRequestQueue(holder.itemView.context), game, updatedState) {
+            ServiceAPI.updateGame(Volley.newRequestQueue(holder.itemView.context), game, updatedState) {
                 Log.println(Log.VERBOSE, TAG, it.toString())
             }
         }

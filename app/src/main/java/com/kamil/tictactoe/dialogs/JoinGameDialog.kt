@@ -9,7 +9,7 @@ import com.android.volley.toolbox.Volley
 import com.kamil.tictactoe.data.GameState
 import com.kamil.tictactoe.databinding.DialogJoinGameBinding
 import com.kamil.tictactoe.game.Board
-import com.kamil.tictactoe.api.GameAPI
+import com.kamil.tictactoe.api.ServiceAPI
 
 class JoinGameDialog: DialogFragment() {
 
@@ -28,7 +28,7 @@ class JoinGameDialog: DialogFragment() {
             val gameCode = binding.gameCode.text.toString()
 
             if (username.isNotEmpty() && gameCode.isNotEmpty()) {
-                GameAPI.joinGame(Volley.newRequestQueue(builder.context), gameCode, username) { gameId: String, json: GameState ->
+                ServiceAPI.joinGame(Volley.newRequestQueue(builder.context), gameCode, username) { gameId: String, json: GameState ->
                     val intent = Intent(builder.context, Board::class.java).apply {
                         val bundle = Bundle()
                         bundle.putParcelable(JSON_RESPONSE, json)

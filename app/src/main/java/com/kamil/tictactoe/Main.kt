@@ -2,7 +2,6 @@ package com.kamil.tictactoe
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.kamil.tictactoe.data.GameState
 import com.kamil.tictactoe.databinding.MainBinding
 import com.kamil.tictactoe.dialogs.CreateGameDialog
 import com.kamil.tictactoe.dialogs.JoinGameDialog
