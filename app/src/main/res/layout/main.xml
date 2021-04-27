@@ -11,7 +11,7 @@
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:layout_marginBottom="300dp"
-        android:text="Create new game"
+        android:text="@string/create_game"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -21,7 +21,7 @@
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:layout_marginBottom="24dp"
-        android:text="Join game"
+        android:text="@string/join_game"
         app:layout_constraintBottom_toTopOf="@+id/createGameButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

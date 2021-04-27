@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import com.android.volley.toolbox.Volley
+import com.kamil.tictactoe.R
 import com.kamil.tictactoe.data.GameState
 import com.kamil.tictactoe.data.initialState
 import com.kamil.tictactoe.databinding.DialogCreateGameBinding
@@ -23,8 +24,8 @@ class CreateGameDialog(
         val inflater = requireActivity().layoutInflater
         val binding = DialogCreateGameBinding.inflate(inflater)
 
-        builder.setTitle("Create game")
-        builder.setPositiveButton("Create") { _, _ ->
+        builder.setTitle(getString(R.string.create_game))
+        builder.setPositiveButton(getString(R.string.create)) { _, _ ->
             val username = binding.username.text.toString()
             if (username.isNotEmpty()) {
                 ServiceAPI.createGame(parent, Volley.newRequestQueue(context), username, initialState, { json: GameState ->
@@ -41,7 +42,7 @@ class CreateGameDialog(
             }
         }
 
-        builder.setNegativeButton("Cancel") { dialog, _ ->
+        builder.setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
             dialog.cancel()
         }
 

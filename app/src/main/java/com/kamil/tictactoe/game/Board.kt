@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
+import com.kamil.tictactoe.R
 import com.kamil.tictactoe.data.GameState
 import com.kamil.tictactoe.databinding.FragmentGridListBinding
 import com.kamil.tictactoe.grid.GridRecyclerViewAdapter
@@ -32,7 +33,7 @@ class Board : AppCompatActivity() {
         val gridLayoutManager = GridLayoutManager(this, 3)
         val gridRecyclerViewAdapter = GridRecyclerViewAdapter(this, data!!, isHost)
 
-        binding.gameId.text = "Game code: ${data!!.gameId}"
+        binding.gameId.text = "${applicationContext.getString(R.string.game_code)} ${data!!.gameId}"
 
         binding.gridLayout.layoutManager = gridLayoutManager
         binding.gridLayout.adapter = gridRecyclerViewAdapter

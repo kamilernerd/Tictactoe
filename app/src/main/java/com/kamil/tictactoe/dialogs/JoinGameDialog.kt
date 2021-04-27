@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import com.android.volley.toolbox.Volley
+import com.kamil.tictactoe.R
 import com.kamil.tictactoe.data.GameState
 import com.kamil.tictactoe.databinding.DialogJoinGameBinding
 import com.kamil.tictactoe.game.Board
@@ -25,9 +26,9 @@ class JoinGameDialog(
         val inflater = requireActivity().layoutInflater
         val binding = DialogJoinGameBinding.inflate(inflater)
 
-        builder.setTitle("Join game")
+        builder.setTitle(getString(R.string.join_game))
 
-        builder.setPositiveButton("Join") { _, _ ->
+        builder.setPositiveButton(getString(R.string.join)) { _, _ ->
             val username = binding.username.text.toString()
             val gameCode = binding.gameCode.text.toString()
 
@@ -46,7 +47,7 @@ class JoinGameDialog(
             }
         }
 
-        builder.setNegativeButton("Cancel") { dialog, _ ->
+        builder.setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
             dialog.cancel()
         }
 
