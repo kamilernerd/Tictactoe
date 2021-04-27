@@ -35,7 +35,7 @@ object GameAPI {
                     playEndingSequence(parentActivity, "You won!")
                 } else if (p2winner) {
                     playEndingSequence(parentActivity, "You lost!")
-                } else if (p1winner && p2winner) {
+                } else if (!p1winner && !p2winner) {
                     playEndingSequence(parentActivity, "Draw!")
                 }
             } else {
@@ -43,7 +43,7 @@ object GameAPI {
                     playEndingSequence(parentActivity, "You lost!")
                 } else if (p2winner) {
                     playEndingSequence(parentActivity, "You won!")
-                } else if (p1winner && p2winner) {
+                } else if (!p1winner && !p2winner) {
                     playEndingSequence(parentActivity, "Draw!")
                 }
             }
