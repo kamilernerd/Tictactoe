@@ -16,7 +16,7 @@ class Board : AppCompatActivity() {
     private lateinit var binding: FragmentGridListBinding
 
     private var data: GameState? = null
-    private var IS_HOST: Boolean = false
+    private var isHost: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,10 +25,10 @@ class Board : AppCompatActivity() {
         setContentView(binding.root)
 
         data = intent.getParcelableExtra(JSON_RESPONSE)
-        IS_HOST = intent.getBooleanExtra("IS_HOST", IS_HOST)
+        isHost = intent.getBooleanExtra(IS_HOST, isHost)
 
         val gridLayoutManager = GridLayoutManager(this, 3)
-        val gridRecyclerViewAdapter = GridRecyclerViewAdapter(this, data!!, IS_HOST)
+        val gridRecyclerViewAdapter = GridRecyclerViewAdapter(this, data!!, isHost)
 
         binding.gameId.text = "Game code: ${data!!.gameId}"
 
@@ -36,8 +36,8 @@ class Board : AppCompatActivity() {
         binding.gridLayout.adapter = gridRecyclerViewAdapter
 
         ServiceAPI.startPolling(this, data!!.gameId) { data: GameState, timer: Timer ->
-            binding.gridLayout.adapter = GridRecyclerViewAdapter(this, data, IS_HOST)
-            GameAPI.showWinnerLoser(IS_HOST, this, data.state, timer)
+            binding.gridLayout.adapter = GridRecyclerViewAdapter(this, data, isHost)
+            GameAPI.showWinnerLoser(isHost, this, data.state, timer)
         }
     }
 
@@ -56,8 +56,9 @@ class Board : AppCompatActivity() {
     }
 
     companion object {
-        val TAG = "BoardActivity"
-        val JSON_RESPONSE = "json_response"
+        const val TAG = "BoardActivity"
+        const val IS_HOST = "IS_HOST"
+        const val JSON_RESPONSE = "json_response"
     }
 
 }

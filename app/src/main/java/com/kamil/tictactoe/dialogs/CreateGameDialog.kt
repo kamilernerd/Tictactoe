@@ -15,45 +15,44 @@ import com.kamil.tictactoe.api.ServiceAPI
 class CreateGameDialog: DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return activity?.let {
+        val builder: AlertDialog.Builder = AlertDialog.Builder(context)
+        val inflater = requireActivity().layoutInflater
+        val binding = DialogCreateGameBinding.inflate(inflater)
 
-            val builder: AlertDialog.Builder = AlertDialog.Builder(it)
-            val inflater = requireActivity().layoutInflater
-            val binding = DialogCreateGameBinding.inflate(inflater)
-
-            builder.apply {
-                setTitle("Create game")
-                setPositiveButton("Create") { dialog, which ->
-
-                    val username = binding.username.text.toString()
-
-                    if (username.isNotEmpty()) {
-                        ServiceAPI.createGame(Volley.newRequestQueue(context), username, initialState) { json: GameState ->
-                            val intent = Intent(builder.context, Board::class.java).apply {
-                                val bundle = Bundle()
-                                bundle.putParcelable(JSON_RESPONSE, json)
-                                putExtras(bundle)
-                                putExtra("IS_HOST", true)
-                            }
-                            builder.context.startActivity(intent)
-                        }
+        builder.setTitle("Create game")
+        builder.setPositiveButton("Create") { _, _ ->
+            val username = binding.username.text.toString()
+            if (username.isNotEmpty()) {
+                ServiceAPI.createGame(
+                    Volley.newRequestQueue(context),
+                    username,
+                    initialState
+                ) { json: GameState ->
+                    val intent = Intent(builder.context, Board::class.java).apply {
+                        val bundle = Bundle()
+                        bundle.putParcelable(JSON_RESPONSE, json)
+                        putExtras(bundle)
+                        putExtra(IS_HOST, true)
                     }
+                    builder.context.startActivity(intent)
                 }
-                setNegativeButton("Cancel") { dialog, which ->
-                    dialog.cancel()
-                }
-                setView(binding.root)
             }
+        }
 
-            builder.create()
+        builder.setNegativeButton("Cancel") { dialog, _ ->
+            dialog.cancel()
+        }
 
+        builder.setView(binding.root)
+        builder.create()
 
-        } ?: throw IllegalStateException("Activity cannot be null")
+        return builder.show()
     }
 
     companion object {
         const val TAG = "CreateGameDialog"
-        val JSON_RESPONSE = "json_response"
+        const val IS_HOST = "IS_HOST"
+        const val JSON_RESPONSE = "json_response"
     }
 
 }

@@ -1,6 +1,5 @@
 package com.kamil.tictactoe.data
 import android.os.Parcelable
-import android.util.Log
 import kotlinx.android.parcel.Parcelize
 
 typealias StateList = List<List<Int>>
