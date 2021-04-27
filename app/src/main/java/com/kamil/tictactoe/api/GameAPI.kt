@@ -1,5 +1,6 @@
 package com.kamil.tictactoe.api
 
+import android.util.Log
 import android.view.animation.TranslateAnimation
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -35,12 +36,16 @@ object GameAPI {
                     playEndingSequence(parentActivity, "You won!")
                 } else if (p2winner) {
                     playEndingSequence(parentActivity, "You lost!")
+                } else if (p1winner && p2winner) {
+                    playEndingSequence(parentActivity, "Draw!")
                 }
             } else {
                 if (p1winner) {
                     playEndingSequence(parentActivity, "You lost!")
                 } else if (p2winner) {
                     playEndingSequence(parentActivity, "You won!")
+                } else if (p1winner && p2winner) {
+                    playEndingSequence(parentActivity, "Draw!")
                 }
             }
 
@@ -86,6 +91,11 @@ object GameAPI {
             callback(currentState, true, false)
         } else if (checkRows(state, PLAYER.P2) || checkCols(state, PLAYER.P2) || checkAcross(state, PLAYER.P2)) {
             callback(currentState, false, true)
+        }
+
+        // Handle draw
+        if (!state.contains(0)) {
+            callback(currentState, false, false)
         }
     }
 
