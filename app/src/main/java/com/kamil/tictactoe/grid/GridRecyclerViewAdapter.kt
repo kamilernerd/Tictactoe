@@ -33,18 +33,12 @@ class GridRecyclerViewAdapter(
 
     inner class ViewHolder(binding: FragmentGridItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        val idView: TextView = binding.itemNumber
-    }
-
-    override fun onViewAttachedToWindow(holder: ViewHolder) {
-        super.onViewAttachedToWindow(holder)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         state = flattenOutState(game.state)
 
         val item = state!![position]
-        holder.idView.text = item.toString()
 
         drawForegroundIcon(item, holder)
 
