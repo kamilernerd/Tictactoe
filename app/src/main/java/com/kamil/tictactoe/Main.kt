@@ -33,15 +33,4 @@ class Main : AppCompatActivity() {
             )
         }
     }
-
-    override fun onResume() {
-        super.onResume()
-        // Check if player is in game and rejoin the game
-    }
-
-    override fun onStop() {
-        super.onStop()
-        // Check if player is in game and forfeit the game
-    }
-
 }

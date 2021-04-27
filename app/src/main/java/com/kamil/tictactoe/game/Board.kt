@@ -36,6 +36,10 @@ class Board : AppCompatActivity() {
 
         binding.gridLayout.layoutManager = gridLayoutManager
         binding.gridLayout.adapter = gridRecyclerViewAdapter
+    }
+
+    override fun onStart() {
+        super.onStart()
 
         ServiceAPI.startPolling(this, data!!.gameId, { data: GameState, timer: Timer ->
             binding.gridLayout.adapter = GridRecyclerViewAdapter(this, data, isHost)
@@ -44,20 +48,6 @@ class Board : AppCompatActivity() {
         }, {
             Toast.makeText(applicationContext, it, Toast.LENGTH_SHORT).show();
         })
-    }
-
-    override fun onStart() {
-        super.onStart()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        // Check if player is in game and rejoin the game
-    }
-
-    override fun onStop() {
-        super.onStop()
-        // Check if player is in game and forfeit the game
     }
 
     companion object {
