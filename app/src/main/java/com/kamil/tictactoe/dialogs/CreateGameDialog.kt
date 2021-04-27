@@ -32,8 +32,9 @@ class CreateGameDialog: DialogFragment() {
                         GameAPI.createGame(Volley.newRequestQueue(context), username, initialState) { json: GameState ->
                             val intent = Intent(builder.context, Board::class.java).apply {
                                 val bundle = Bundle()
-                                bundle.putParcelable(JoinGameDialog.JSON_RESPONSE, json)
+                                bundle.putParcelable(JSON_RESPONSE, json)
                                 putExtras(bundle)
+                                putExtra("IS_HOST", true)
                             }
                             builder.context.startActivity(intent)
                         }

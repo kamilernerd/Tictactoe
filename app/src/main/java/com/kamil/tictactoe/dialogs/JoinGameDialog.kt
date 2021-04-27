@@ -38,6 +38,7 @@ class JoinGameDialog: DialogFragment() {
                         val bundle = Bundle()
                         bundle.putParcelable(JSON_RESPONSE, json)
                         putExtras(bundle)
+                        putExtra("IS_HOST", false)
                     }
                     builder.context.startActivity(intent)
                 }
