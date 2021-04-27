@@ -23,9 +23,11 @@ typealias GenericErrorCallback = (message: String) -> Unit
 
 object ServiceAPI {
 
-    private const val BASE_URI = "https://api.kamiloracz.no"
+    private const val BASE_URI = "https://generic-game-service.herokuapp.com"
     private const val JOIN_GAME = "$BASE_URI/game/join"
     private const val CREATE_GAME = "$BASE_URI/game"
+
+    private const val API_KEY = "gjF9ebA3Ix"
 
     /**
      * Function to rebuild json string
@@ -66,7 +68,7 @@ object ServiceAPI {
             override fun getHeaders(): MutableMap<String, String> {
                 val headers = HashMap<String, String>()
                 headers["Content-Type"] = "application/json"
-                headers["Game-Service-Key"] = "TestKey"
+                headers["Game-Service-Key"] = API_KEY
                 return headers
             }
         }
@@ -90,7 +92,7 @@ object ServiceAPI {
             override fun getHeaders(): MutableMap<String, String> {
                 val headers = HashMap<String, String>()
                 headers["Content-Type"] = "application/json"
-                headers["Game-Service-Key"] = "TestKey"
+                headers["Game-Service-Key"] = API_KEY
                 return headers
             }
         }
@@ -119,7 +121,7 @@ object ServiceAPI {
             override fun getHeaders(): MutableMap<String, String> {
                 val headers = HashMap<String, String>()
                 headers["Content-Type"] = "application/json"
-                headers["Game-Service-Key"] = "TestKey"
+                headers["Game-Service-Key"] = API_KEY
                 return headers
             }
         }
@@ -147,7 +149,7 @@ object ServiceAPI {
             override fun getHeaders(): MutableMap<String, String> {
                 val headers = HashMap<String, String>()
                 headers["Content-Type"] = "application/json"
-                headers["Game-Service-Key"] = "TestKey"
+                headers["Game-Service-Key"] = API_KEY
                 return headers
             }
         }
