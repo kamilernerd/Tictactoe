@@ -9,6 +9,7 @@ import com.kamil.tictactoe.databinding.FragmentGridListBinding
 import com.kamil.tictactoe.grid.GridRecyclerViewAdapter
 import com.kamil.tictactoe.api.GameAPI
 import com.kamil.tictactoe.api.ServiceAPI
+import com.kamil.tictactoe.grid.GridRecyclerViewAdapter.Companion.BLOCK_CLICK
 import java.util.*
 
 
@@ -39,6 +40,7 @@ class Board : AppCompatActivity() {
         ServiceAPI.startPolling(this, data!!.gameId, { data: GameState, timer: Timer ->
             binding.gridLayout.adapter = GridRecyclerViewAdapter(this, data, isHost)
             GameAPI.showWinnerLoser(isHost, this, data.state, timer)
+            BLOCK_CLICK = false
         }, {
             Toast.makeText(applicationContext, it, Toast.LENGTH_SHORT).show();
         })

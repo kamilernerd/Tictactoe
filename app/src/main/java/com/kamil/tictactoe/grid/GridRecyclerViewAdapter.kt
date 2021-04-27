@@ -6,6 +6,7 @@ import android.view.Gravity
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.android.volley.toolbox.Volley
@@ -43,7 +44,7 @@ class GridRecyclerViewAdapter(
         drawForegroundIcon(item, holder)
 
         holder.itemView.setOnClickListener {
-            if (state!![position] != ITEM_TYPE.EMPTY.ordinal) {
+            if (state!![position] != ITEM_TYPE.EMPTY.ordinal || BLOCK_CLICK) {
                 return@setOnClickListener
             }
 
@@ -54,6 +55,7 @@ class GridRecyclerViewAdapter(
 
             ServiceAPI.updateGame(Volley.newRequestQueue(holder.itemView.context), game, updatedState, {
                 Log.println(Log.VERBOSE, TAG, it.toString())
+                BLOCK_CLICK = true
             }, {
                 Toast.makeText(parentActivity.applicationContext, it, Toast.LENGTH_SHORT).show();
             })
@@ -139,5 +141,6 @@ class GridRecyclerViewAdapter(
 
     companion object {
         const val TAG = "GridRecyclerViewAdapter"
+        var BLOCK_CLICK: Boolean = false
     }
 }
