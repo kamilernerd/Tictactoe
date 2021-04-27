@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.android.volley.toolbox.Volley
 import com.kamil.tictactoe.R
 import com.kamil.tictactoe.data.GameState
+import com.kamil.tictactoe.data.StateList
 import com.kamil.tictactoe.data.buildStateList
 import com.kamil.tictactoe.data.flattenOutState
 import com.kamil.tictactoe.databinding.FragmentGridItemBinding
@@ -46,6 +47,36 @@ class GridRecyclerViewAdapter(
         val item = state!![position]
         holder.idView.text = item.toString()
 
+        drawForegroundIcon(item, holder)
+
+        holder.itemView.setOnClickListener {
+            if (state!![position] != ITEM_TYPE.EMPTY.ordinal) {
+                return@setOnClickListener
+            }
+
+            // Set cross
+            holder.itemView.foreground = getDrawable(ITEM_TYPE.CROSS)
+            holder.itemView.foregroundGravity = Gravity.CENTER
+
+            val updatedState = buildCurrentState(state!!, position)
+
+            // Send data
+            GameAPI.updateGame(Volley.newRequestQueue(holder.itemView.context), game, updatedState) {
+                Log.println(Log.VERBOSE, TAG, it.toString())
+            }
+        }
+    }
+
+    private fun buildCurrentState(state: MutableList<Int>, position: Int): StateList {
+        if (IS_HOST) {
+            state[position] = ITEM_TYPE.CROSS.ordinal
+        } else {
+            state[position] = ITEM_TYPE.CIRCLE.ordinal
+        }
+        return buildStateList(state)
+    }
+
+    private fun drawForegroundIcon(item: Int, holder: ViewHolder) {
         if (IS_HOST) {
             if (item == ITEM_TYPE.CROSS.ordinal) {
                 holder.itemView.foreground = getDrawable(ITEM_TYPE.CROSS)
@@ -63,34 +94,9 @@ class GridRecyclerViewAdapter(
                 holder.itemView.foregroundGravity = Gravity.CENTER
             }
         }
-
-        holder.itemView.setOnClickListener {
-            if (state!![position] != ITEM_TYPE.EMPTY.ordinal) {
-                return@setOnClickListener
-            }
-
-            // Set cross
-            holder.itemView.foreground = getDrawable(ITEM_TYPE.CROSS)
-            holder.itemView.foregroundGravity = Gravity.CENTER
-
-            // Build current state
-            if (IS_HOST) {
-                state!![position] = ITEM_TYPE.CROSS.ordinal
-            } else {
-                state!![position] = ITEM_TYPE.CIRCLE.ordinal
-            }
-
-            // Prepare new game state object
-            val updatedState = buildStateList(state!!)
-
-            // Send data
-            GameAPI.updateGame(Volley.newRequestQueue(holder.itemView.context), game, updatedState) {
-                Log.println(Log.VERBOSE, TAG, it.toString())
-            }
-        }
     }
 
-    fun getDrawable(type: ITEM_TYPE): Drawable? {
+    private fun getDrawable(type: ITEM_TYPE): Drawable? {
         if (type == ITEM_TYPE.CROSS) {
             return parentActivity.getDrawable(R.drawable.cross_24)
         } else if (type == ITEM_TYPE.CIRCLE) {
