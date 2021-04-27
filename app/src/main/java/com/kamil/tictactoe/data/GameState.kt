@@ -1,6 +1,5 @@
 package com.kamil.tictactoe.data
 import android.os.Parcelable
-import android.util.Log
 import kotlinx.android.parcel.Parcelize
 
 typealias StateList = List<List<Int>>
@@ -30,7 +29,7 @@ fun buildStateList(state: List<Int>): StateList {
     return state.chunked(3)
 }
 
-public val initialState: StateList = listOf(
+val initialState: StateList = listOf(
     listOf(0, 0, 0),
     listOf(0, 0, 0),
     listOf(0, 0, 0)
