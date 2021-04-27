@@ -1,6 +1,5 @@
 package com.kamil.tictactoe.api
 
-import android.util.Log
 import android.view.animation.TranslateAnimation
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
