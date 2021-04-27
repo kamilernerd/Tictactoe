@@ -6,7 +6,8 @@ Tictactoe spill med følgende funksjonalitet.
 - Mulighet til å opprette et spill
 - Mulighet til å bli med i et eksisterende spill
 - Ryddig kode, godt kommentert både ServiceAPI og GameAPI
-- Melding når spiller har vunnet/tapt eller uavgjort
+- Spill logikk separert fra server logikk
+- Melding når spiller har vunnet/tapt eller uavgjort (Animasjon som glir opp fra ca. Midten av skjermen)
 - Error meldinger med toasts hvis serveren feiler å svare
 
 ![alt text](https://raw.githubusercontent.com/kamilernerd/Tictactoe/master/bilder/img1.png?token=AFY7P5BIMOUKDEYOHN3OZDDASGSHU)
