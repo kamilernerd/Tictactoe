@@ -13,6 +13,7 @@ import com.google.gson.Gson
 import com.kamil.tictactoe.R
 import com.kamil.tictactoe.data.GameState
 import com.kamil.tictactoe.data.StateList
+import org.json.JSONArray
 import org.json.JSONObject
 import java.util.*
 import kotlin.collections.HashMap
@@ -32,22 +33,6 @@ object ServiceAPI {
     private const val CREATE_GAME = "$BASE_URI/game"
 
     private const val API_KEY = "gjF9ebA3Ix"
-
-    /**
-     * Function to rebuild json string
-     * Somehow 2d state array is converted to a string of 2d array and makes gson go nuts
-     * @param response [String] Server response
-     * @return [String] New json string
-     */
-    private fun rebuildJsonString(response: String): String {
-        val jsonResponse = JSONObject(response)
-        val state = jsonResponse.getString("state")
-        val players = jsonResponse.getString("players")
-        val gameId = jsonResponse.getString("gameId")
-
-        // Somehow 2d state array is converted to a string of 2d array and makes gson go nuts
-        return "{\"players\": $players, \"gameId\": \"$gameId\", \"state\": $state}"
-    }
 
     /**
      * Shows spinner in main activity
@@ -79,10 +64,10 @@ object ServiceAPI {
         val body = JSONObject()
         body.put("gameId", currentState.gameId)
         body.put("players", currentState.players)
-        body.put("state", state)
+        body.put("state", JSONArray(state))
 
         val request = object : JsonObjectRequest(Method.POST, "${BASE_URI}/game/${currentState.gameId}/update", body, Response.Listener { response ->
-                callback(Gson().fromJson(rebuildJsonString(response.toString()), GameState::class.java))
+                callback(Gson().fromJson(response.toString(), GameState::class.java))
             },
             Response.ErrorListener { error ->
                 errorCallback(context.getString(R.string.could_not_update_match))
@@ -106,7 +91,7 @@ object ServiceAPI {
      */
     fun pollGame(context: Context, requestQueue: RequestQueue1, gameId: String, callback: PollGameCallback, errorCallback: GenericErrorCallback) {
         val request = object : JsonObjectRequest(Method.GET, "${BASE_URI}/game/$gameId/poll", null, Response.Listener { response ->
-                callback(Gson().fromJson(rebuildJsonString(response.toString()), GameState::class.java))
+                callback(Gson().fromJson(response.toString(), GameState::class.java))
             },
             Response.ErrorListener { error ->
                 errorCallback(context.getString(R.string.could_not_pull_game_data))
@@ -138,7 +123,7 @@ object ServiceAPI {
 
         val request = object : JsonObjectRequest(Method.POST, "${BASE_URI}/game/$gameId/join", body, Response.Listener { response ->
                 hideProgressBar(parent)
-                callback(gameId, Gson().fromJson(rebuildJsonString(response.toString()), GameState::class.java))
+                callback(gameId, Gson().fromJson(response.toString(), GameState::class.java))
             },
             Response.ErrorListener { error ->
                 hideProgressBar(parent)
@@ -165,13 +150,13 @@ object ServiceAPI {
     fun createGame(parent: AppCompatActivity, requestQueue: RequestQueue1, playerName: String, matchState: StateList, callback: CreateGameCallback, errorCallback: GenericErrorCallback) {
         val body = JSONObject()
         body.put("player", playerName)
-        body.put("state", matchState)
+        body.put("state", JSONArray(matchState))
 
         showProgressBar(parent)
 
         val request = object : JsonObjectRequest(Method.POST, CREATE_GAME, body, Response.Listener { response ->
             hideProgressBar(parent)
-            callback(Gson().fromJson(rebuildJsonString(response.toString()), GameState::class.java))
+            callback(Gson().fromJson(response.toString(), GameState::class.java))
         }, Response.ErrorListener { error ->
             hideProgressBar(parent)
             errorCallback(parent.getString(R.string.could_not_create_new_game))
