@@ -51,6 +51,21 @@ class Board : AppCompatActivity() {
         })
     }
 
+    override fun onPause() {
+        super.onPause()
+        finish()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        finish()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        finish()
+    }
+
     companion object {
         const val TAG = "BoardActivity"
         const val IS_HOST = "IS_HOST"
